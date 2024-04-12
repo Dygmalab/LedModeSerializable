@@ -1,0 +1,1 @@
+This repository holds the LED abstractions for the effects reproduced on the keyscanner, the following code has snippets form the FastLED project for certain effects, https://github.com/FastLED/FastLED
