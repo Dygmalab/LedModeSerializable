@@ -36,11 +36,13 @@
 #include <functional>
 #endif
 
+#ifdef KEYSCANNER
 const int NUM_LEDS = NUMBER_OF_LEDS;
 uint8_t ledState[NUMBER_OF_LEDS] = {0}; // Estado de cada LED (0 = apagado, 1 = encendido)
 uint64_t keypress_leds[NUMBER_OF_LEDS] = {0};
 uint16_t rainbowHue[NUMBER_OF_LEDS] = {0};
 float fade_factor[NUMBER_OF_LEDS] = {0};
+#endif
 
 class LedModeSerializable_Stalker : public LedModeSerializable
 {
@@ -285,6 +287,7 @@ public:
   uint8_t w_;
 
 private:
+#ifdef KEYSCANNER
   uint8_t pos_left[Pins::ROWS][Pins::COLS] = {
       {0, 1, 2, 3, 4, 5, 6},
       {7, 8, 9, 10, 11, 12},
@@ -300,6 +303,7 @@ private:
       {22, 23, 24, 25, 26, 27},
       {28, 29, 30, 31, 32, 33, 34, 35},
   };
+#endif
 };
 
 static LedModeSerializable_Stalker ledModeSerializableStalker{CRC32_STR("LedModeSerializable_Stalker")};
