@@ -37,15 +37,9 @@ class LedModeSerializable_Rainbow : public LedModeSerializable {
     : LedModeSerializable(id) {
   }
 
-#ifdef KEYSCANNER
   void update() override {
 
   }
-#else
-  void update() override {
-
-  }
-#endif
 
  private:
 
