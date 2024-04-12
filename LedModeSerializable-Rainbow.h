@@ -39,6 +39,8 @@ public:
     {
     }
 
+#ifdef KEYSCANNER
+
     void update() override
     {
         // Incrementar el valor de matiz (hue) para el arco iris
@@ -93,6 +95,7 @@ public:
         LEDManagement::set_all_leds(rainbow);
         LEDManagement::set_updated(true);
     }
+#endif
 
 private:
 };

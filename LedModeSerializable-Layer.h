@@ -55,6 +55,14 @@ public:
     return ++index;
   }
 
+#ifdef NEURON_WIRED
+  void update() override
+  {
+  }
+#endif
+
+#ifdef KEYSCANNER
+
   void update() override
   {
     static float led_driver_brightness = LEDManagement::get_max_ledDriver_brightness();
@@ -148,6 +156,7 @@ public:
     }
   }
 
+#endif
   uint8_t layer;
   uint8_t fade_is_on;
 

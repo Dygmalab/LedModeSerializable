@@ -26,8 +26,10 @@
 
 #include "LedModeSerializable.h"
 #include "cstdio"
-#include "LEDManagement.hpp"
 
+#ifdef KEYSCANNER
+#include <LEDManagement.hpp>
+#endif
 class LedModeSerializable_SolidColor : public LedModeSerializable
 {
 public:
@@ -56,11 +58,15 @@ public:
     return ++index;
   }
 
+#ifdef KEYSCANNER
+
   void update() override
   {
     LEDManagement::set_all_leds({r_, g_, b_, w_});
     LEDManagement::set_updated(true);
   }
+
+#endif
 
   uint8_t r_, g_, b_, w_;
 };

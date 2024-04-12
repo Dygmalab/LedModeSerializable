@@ -27,7 +27,9 @@
 #include "LedModeSerializable.h"
 #include "cstdio"
 
+#ifdef KEYSCANNER
 #include <LEDManagement.hpp>
+#endif
 
 class LedModeSerializable_Breathe : public LedModeSerializable
 {
@@ -44,6 +46,8 @@ public:
     output[++index] = breatheHue;
     return ++index;
   }
+
+#ifdef KEYSCANNER
 
   uint8_t deSerialize(const uint8_t *input) override
   {
@@ -73,6 +77,11 @@ public:
     breathe.w = 0;
     LEDManagement::set_all_leds(breathe);
   }
+#else
+  void update() override
+  {
+  }
+#endif
 
   uint16_t breatheSaturation;
 

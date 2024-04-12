@@ -35,6 +35,8 @@ public:
   {
   }
 
+#ifdef KEYSCANNER
+
   void update() override
   {
     // Determinar el valor base de matiz (hue) para el arco iris
@@ -112,6 +114,8 @@ public:
     // Indicar que los LEDs han sido actualizados
     LEDManagement::set_updated(true);
   }
+
+#endif
 
 private:
   uint16_t rainbowHue = 0;

@@ -26,12 +26,15 @@
 
 #include "LedModeSerializable.h"
 #include "cstdio"
+
+#ifdef KEYSCANNER
 #include "debug_print.h"
 #define FADE_DURATION 9000
 #include <LEDManagement.hpp>
 #include <Keyscanner.hpp>
 #include <array>
 #include <functional>
+#endif
 
 const int NUM_LEDS = NUMBER_OF_LEDS;
 uint8_t ledState[NUMBER_OF_LEDS] = {0}; // Estado de cada LED (0 = apagado, 1 = encendido)
@@ -68,6 +71,8 @@ public:
     base_settings.delay_ms = 50;
     return index;
   }
+
+#ifdef KEYSCANNER
 
   inline static std::array<std::array<uint8_t, Pins::COLS>, Pins::ROWS> map{};
 
@@ -267,7 +272,13 @@ public:
       last_time = currentTime;
     }
   }
+#else
 
+  void update() override
+  {
+  }
+
+#endif
   uint8_t r_;
   uint8_t g_;
   uint8_t b_;
