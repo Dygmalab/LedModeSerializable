@@ -2,7 +2,7 @@
  * Copyright (C) 2023, 2024  DygmaLabs, S. L.
  *
  * The MIT License (MIT)
- * Copyright © 2024 <copyright holders>
+ * Copyright © 2024 DygmaLab S.L.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the “Software”), to deal in the
@@ -31,54 +31,59 @@
 #include <LEDManagement.hpp>
 #endif
 
-class LedModeSerializable_Rainbow : public LedModeSerializable {
- public:
-  explicit LedModeSerializable_Rainbow(uint32_t id)
-    : LedModeSerializable(id) {
-  }
+class LedModeSerializable_Rainbow : public LedModeSerializable
+{
+public:
+    explicit LedModeSerializable_Rainbow(uint32_t id)
+        : LedModeSerializable(id)
+    {
+    }
 
-    void update() override {
+    void update() override
+    {
         // Incrementar el valor de matiz (hue) para el arco iris
         rainbowHue++;
 
         // Asegurarse de que el valor de matiz (hue) esté en el rango correcto
-        if (rainbowHue >= 255) {
+        if (rainbowHue >= 255)
+        {
             rainbowHue -= 255;
         }
 
         // Convertir el valor de matiz (hue) directamente en un color RGB
         RGBW rainbow;
-        switch (rainbowHue / 43) {
-            case 0:
-                rainbow.r = 255;
-                rainbow.g = rainbowHue * 6;
-                rainbow.b = 0;
-                break;
-            case 1:
-                rainbow.r = 255 - (rainbowHue - 43) * 6;
-                rainbow.g = 255;
-                rainbow.b = 0;
-                break;
-            case 2:
-                rainbow.r = 0;
-                rainbow.g = 255;
-                rainbow.b = (rainbowHue - 86) * 6;
-                break;
-            case 3:
-                rainbow.r = 0;
-                rainbow.g = 255 - (rainbowHue - 129) * 6;
-                rainbow.b = 255;
-                break;
-            case 4:
-                rainbow.r = (rainbowHue - 172) * 6;
-                rainbow.g = 0;
-                rainbow.b = 255;
-                break;
-            default:
-                rainbow.r = 255;
-                rainbow.g = 0;
-                rainbow.b = 255 - (rainbowHue - 215) * 6;
-                break;
+        switch (rainbowHue / 43)
+        {
+        case 0:
+            rainbow.r = 255;
+            rainbow.g = rainbowHue * 6;
+            rainbow.b = 0;
+            break;
+        case 1:
+            rainbow.r = 255 - (rainbowHue - 43) * 6;
+            rainbow.g = 255;
+            rainbow.b = 0;
+            break;
+        case 2:
+            rainbow.r = 0;
+            rainbow.g = 255;
+            rainbow.b = (rainbowHue - 86) * 6;
+            break;
+        case 3:
+            rainbow.r = 0;
+            rainbow.g = 255 - (rainbowHue - 129) * 6;
+            rainbow.b = 255;
+            break;
+        case 4:
+            rainbow.r = (rainbowHue - 172) * 6;
+            rainbow.g = 0;
+            rainbow.b = 255;
+            break;
+        default:
+            rainbow.r = 255;
+            rainbow.g = 0;
+            rainbow.b = 255 - (rainbowHue - 215) * 6;
+            break;
         }
 
         // Establecer la luminosidad y apagar el componente blanco
@@ -89,8 +94,7 @@ class LedModeSerializable_Rainbow : public LedModeSerializable {
         LEDManagement::set_updated(true);
     }
 
- private:
-
+private:
 };
 
 static LedModeSerializable_Rainbow ledModeSerializableRainbow{CRC32_STR("LedModeSerializable_Rainbow")};

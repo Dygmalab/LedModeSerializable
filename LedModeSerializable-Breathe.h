@@ -2,7 +2,7 @@
  * Copyright (C) 2023, 2024  DygmaLabs, S. L.
  *
  * The MIT License (MIT)
- * Copyright © 2024 <copyright holders>
+ * Copyright © 2024 DygmaLab S.L.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the “Software”), to deal in the
@@ -29,42 +29,48 @@
 
 #include <LEDManagement.hpp>
 
-class LedModeSerializable_Breathe : public LedModeSerializable {
- public:
+class LedModeSerializable_Breathe : public LedModeSerializable
+{
+public:
   explicit LedModeSerializable_Breathe(uint32_t id)
-    : LedModeSerializable(id) {
+      : LedModeSerializable(id)
+  {
   }
 
-  uint8_t serialize(uint8_t *output) const override {
-    uint8_t index   = LedModeSerializable::serialize(output);
-    output[index]   = breatheSaturation;
+  uint8_t serialize(uint8_t *output) const override
+  {
+    uint8_t index = LedModeSerializable::serialize(output);
+    output[index] = breatheSaturation;
     output[++index] = breatheHue;
     return ++index;
   }
 
-  uint8_t deSerialize(const uint8_t *input) override {
-    uint8_t index     = LedModeSerializable::deSerialize(input);
+  uint8_t deSerialize(const uint8_t *input) override
+  {
+    uint8_t index = LedModeSerializable::deSerialize(input);
     breatheSaturation = input[index];
-    breatheHue        = input[++index];
+    breatheHue = input[++index];
     return ++index;
   }
 
-  void update() override {
+  void update() override
+  {
     // This code is adapted from FastLED lib8tion.h as of dd5d96c6b289cb6b4b891748a4aeef3ddceaf0e6
     uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 4;
 
-    if (i & 0x80) {
+    if (i & 0x80)
+    {
       i = 255 - i;
     }
 
-    i           = i << 1;
-    uint8_t ii  = (i * i) >> 8;
+    i = i << 1;
+    uint8_t ii = (i * i) >> 8;
     uint8_t iii = (ii * i) >> 8;
 
     i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
     RGBW breathe = LEDManagement::HSVtoRGB(breatheHue, breatheSaturation, i);
-    breathe.w    = 0;
+    breathe.w = 0;
     LEDManagement::set_all_leds(breathe);
   }
 
@@ -72,7 +78,7 @@ class LedModeSerializable_Breathe : public LedModeSerializable {
 
   uint16_t breatheHue;
 
- private:
+private:
   uint8_t breatheLastUpdate = 0;
 };
 
