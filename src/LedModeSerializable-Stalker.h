@@ -243,7 +243,7 @@ public:
     static uint32_t last_time = currentTime;
 
     uint8_t data[Pins::ROWS]{};
-    KeyScanner.readMatrix(data);
+    KeyScanner.get_key_matrix(data);
     for (int i = 0; i < Pins::ROWS; ++i)
     {
       uint8_t rows = data[i];

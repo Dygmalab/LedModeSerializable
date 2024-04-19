@@ -44,7 +44,8 @@ public:
     void update() override
     {
         // Incrementar el valor de matiz (hue) para el arco iris
-        rainbowHue++;
+
+      rainbowHue++;
 
         // Asegurarse de que el valor de matiz (hue) esté en el rango correcto
         if (rainbowHue >= 255)
@@ -98,6 +99,7 @@ public:
 #endif
 
 private:
+ uint8_t rainbowHue = 0;
 };
 
 static LedModeSerializable_Rainbow ledModeSerializableRainbow{CRC32_STR("LedModeSerializable_Rainbow")};
