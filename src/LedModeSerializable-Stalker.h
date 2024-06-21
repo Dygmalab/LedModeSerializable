@@ -253,6 +253,7 @@ public:
         {
           map[i][j] = 0xFF;
           uint8_t led_position;
+#ifdef RAISE2
           if (gpio_get(Pins::SIDE_ID))
           {
             led_position = pos_right[i][j];
@@ -262,6 +263,13 @@ public:
           {
             led_position = pos_left[i][j];
           }
+#else
+          led_position = i * (Pins::ROWS + 2) + j;
+          if (led_position > 26)
+          {
+            led_position--;
+          }
+#endif
           handleKeyPress(led_position);
         }
       }
