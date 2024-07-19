@@ -257,11 +257,12 @@ public:
           if (gpio_get(Pins::SIDE_ID))
           {
             led_position = pos_right[i][j];
-            DBG_PRINTF_TRACE("Key pressed");
+            DBG_PRINTF_TRACE("pos: %i, %i\n", i, j);
           }
           else
           {
             led_position = pos_left[i][j];
+              DBG_PRINTF_TRACE("pos: %i, %i\n", i, j);
           }
 #else
           led_position = i * (Pins::ROWS + 2) + j;
@@ -296,21 +297,29 @@ public:
 
 private:
 #ifdef KEYSCANNER
+
   uint8_t pos_left[Pins::ROWS][Pins::COLS] = {
       {0, 1, 2, 3, 4, 5, 6},
       {7, 8, 9, 10, 11, 12},
       {13, 14, 15, 16, 17, 18},
       {19, 20, 21, 22, 23, 24, 25},
-      {26, 27, 28, 29, 30, 31, 32, 33},
+      {26, 27, 28, 29, 30, 31, 32},
   };
 
-  uint8_t pos_right[Pins::ROWS][Pins::COLS] = {
-      {0, 1, 2, 3, 4, 5, 6},
-      {15, 8, 9, 10, 11, 12, 13, 14},
-      {7, 16, 17, 18, 19, 20, 21},
-      {22, 23, 24, 25, 26, 27},
-      {28, 29, 30, 31, 32, 33, 34, 35},
-  };
+/*  uint8_t pos_right[Pins::ROWS][Pins::COLS] = {
+      {0, 4, 8, 12, 16, 20, 24},
+      {1, 5, 9, 13, 17, 21, 25, 27},
+      {2, 6, 10, 14, 18, 22, 26},
+      {28, 32, 29, 33, 30, 34},
+      {3, 7, 11, 15, 19, 23, 31, 35},
+  };*/
+    uint8_t pos_right[Pins::ROWS][Pins::COLS] = {
+            {0, 1, 2, 3, 4, 5, 6},
+            {7, 8, 9, 10, 11, 12, 13, 14},
+            {15, 16, 17, 18, 19, 20, 21},
+            {22, 23, 24, 25, 26, 27},
+            {28, 29, 30, 31, 32, 33, 34,35}
+    };
 #endif
 };
 
