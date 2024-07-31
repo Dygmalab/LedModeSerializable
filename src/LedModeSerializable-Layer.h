@@ -82,13 +82,18 @@ public:
       actualLayer = LEDManagement::layers.at(this->layer);
     }
 
-    for (uint8_t i = 0; i < NUMBER_OF_LEDS; i++)
+    for (uint8_t i = 0; i < Pins::MAX_BL_LEDS; i++)
     {
-
-      RGBW &color = LEDManagement::palette[actualLayer.leds[i]];
+      RGBW &color = LEDManagement::palette[actualLayer.keyMap_leds[i]];
       LEDManagement::set_led_at(color, i);
     }
 
+    for (uint8_t  i  = 0;  i < Pins::MAX_UG_LEDS ; i++)
+    {
+        RGBW &color = LEDManagement::palette[actualLayer.underGlow_leds[i]];
+        LEDManagement::set_ug_at(color, i);
+    }
+    LEDManagement::set_updated(true);
     if (fade_is_on)
     {
       if (layer != 0)

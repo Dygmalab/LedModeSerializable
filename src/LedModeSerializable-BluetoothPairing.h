@@ -205,27 +205,38 @@ public:
     underglow_led_id++;
   }
 #else
-  void setUnderglowLEDS()
-  {
-    if (underglow_led_id > 88)
+    void setUnderglowLEDS()
     {
-      underglow_led_id = 35;
+      const uint8_t MAX_UG_LEDS = Pins::MAX_UG_LEDS; // Suponiendo que Pins::MAX_UG_LEDS define el número máximo de LEDs
+      const uint8_t MAX_LED_ID = MAX_UG_LEDS; // Definir el valor máximo del ID del LED
+      const uint8_t WRAP_AROUND_LED_ID = 0; // Definir el valor de envoltura para el ID del LED
+
+      // Apagar todos los LEDs primero
+      for (uint8_t i = 0; i < MAX_UG_LEDS; ++i)
+      {
+        LEDManagement::set_ug_at(ledOff, i);
+      }
+
+      // Encender el LED actual y el siguiente
+      LEDManagement::set_ug_at(blue, underglow_led_id);
+
+      if (underglow_led_id + 1 > MAX_LED_ID)
+      {
+        LEDManagement::set_ug_at(blue, WRAP_AROUND_LED_ID);
+      }
+      else
+      {
+        LEDManagement::set_ug_at(blue, underglow_led_id + 1);
+      }
+
+      // Incrementar el valor de underglow_led_id
+      underglow_led_id++;
+      if (underglow_led_id > MAX_LED_ID)
+      {
+        underglow_led_id = 0;
+      }
     }
-    LEDManagement::set_led_at(blue, underglow_led_id);
-    if (underglow_led_id - 1 != 34)
-    {
-      LEDManagement::set_led_at(ledOff, underglow_led_id - 1);
-    }
-    if (underglow_led_id + 1 > 88)
-    {
-      LEDManagement::set_led_at(blue, 35);
-    }
-    else
-    {
-      LEDManagement::set_led_at(blue, underglow_led_id + 1);
-    }
-    underglow_led_id++;
-  }
+
 #endif
 
   void breathe(uint8_t channel_id)
@@ -272,7 +283,7 @@ private:
   };
   std::vector<RGBW> key_color{5};
   std::vector<uint8_t> is_paired{5};
-  uint8_t underglow_led_id = 36;
+  uint8_t underglow_led_id = 0;
 #endif
 };
 
