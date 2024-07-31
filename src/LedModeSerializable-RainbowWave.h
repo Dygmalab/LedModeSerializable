@@ -32,14 +32,13 @@ class LedModeSerializable_RainbowWave : public LedModeSerializable
 {
 public:
     explicit LedModeSerializable_RainbowWave(uint32_t id)
-            : LedModeSerializable(id)
+            : LedModeSerializable(id), rainbowHue(0)
     {
     }
 
     uint8_t deSerialize(const uint8_t *input) override
     {
         uint8_t index = LedModeSerializable::deSerialize(input);
-        base_settings.delay_ms = 50;
         return ++index;
     }
 
@@ -57,8 +56,8 @@ public:
         uint8_t baseHue = rainbowHue % 255;
 
         // Número de LEDs en cada fila
-        const uint8_t NUM_ROWS = 7;
-        const uint8_t NUM_COLS[NUM_ROWS] = {7, 7, 7, 6, 5, 3, Pins::UG_LEDS};
+        const uint8_t NUM_ROWS = 6;
+        const uint8_t NUM_COLS[NUM_ROWS] =  {7, 7, 7, 6, 4, 4};
 
         // Calcular el paso entre filas basado en la cantidad de filas
         uint8_t hueStep = 255 / NUM_ROWS;
@@ -81,17 +80,12 @@ public:
             }
         }
 
-       // update_underglow_leds();
-
         // Incrementar el valor de matiz (hue) base para el próximo ciclo
         rainbowHue++;
 
-        // Ajustar el valor de matiz (hue) base para mantenerlo dentro del rango [0, 255]
-        if (rainbowHue >= 255) {
-            rainbowHue -= 255;
-        }
+        update_underglow_leds();
 
-            LEDManagement::set_updated(true);
+        LEDManagement::set_updated(true);
     }
 
 #endif
@@ -145,13 +139,15 @@ private:
     void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) {
         // Calcular el índice del LED en la matriz de LEDs
         uint8_t ledIndex = col;
-        for (uint8_t j = 0; j < row; ++j) {
+        for (uint8_t j = 0; j < row; ++j)
+        {
             ledIndex += NUM_COLS[j];
         }
-            LEDManagement::set_led_at(color, ledIndex);
+       LEDManagement::set_led_at(color, ledIndex);
     }
 
-    void update_underglow_leds() {
+    void update_underglow_leds()
+    {
         // Determinar el valor base de matiz (hue) para el arco iris
         uint8_t baseHue = rainbowHue % 255;
 
@@ -159,12 +155,12 @@ private:
         const uint8_t NUM_LEDS = 53;
 
         // Iterar sobre cada LED
-        for (uint8_t i = Pins::MAX_BL_LEDS + 1; i < Pins::MAX_BL_LEDS + 9; ++i)
+        for (uint8_t i = 0; i < Pins::MAX_UG_LEDS; ++i)
         {
             // Calcular el color del arco iris basado en la posición del LED y el matiz base
-            uint8_t hue = (baseHue + i * 256 / NUM_LEDS) % 255;
+            uint8_t hue = (baseHue + ((i - Pins::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
             RGBW color = calculateRGBWFromHue(hue);
-            LEDManagement::set_led_at(color, i);
+            LEDManagement::set_ug_at(color, i);
         }
 
     }
