@@ -238,7 +238,7 @@ public:
 
     LEDManagement::set_led_at(breathe, channel_id + 1);
   }
-#endif
+
   uint8_t paired_channels_;
   uint8_t connected_channel_id_;
   uint8_t advertising_id;

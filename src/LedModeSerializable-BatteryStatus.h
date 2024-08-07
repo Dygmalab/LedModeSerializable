@@ -118,7 +118,7 @@ public:
       }
       else
       {
-        breathe(thirdCellPosition);
+        breathe(Pins::thirdCellPosition);
       }
       break;
     }
@@ -133,7 +133,6 @@ private:
   static constexpr RGBW red = {255, 0, 0, 0};
   static constexpr RGBW ledOff = {0, 0, 0, 0};
 
-  static constexpr uint8_t thirdCellPosition = 20;
   static constexpr uint8_t charging_time_led_effect = 160;
   static void setLedState(const RGBW &first, const RGBW &second, const RGBW &third)
   {
@@ -145,9 +144,9 @@ private:
 
   static void updateLedEffect()
   {
-    LEDManagement::set_led_at(firstCell, 6);
-    LEDManagement::set_led_at(secondCell, 13);
-    LEDManagement::set_led_at(thirdCell, thirdCellPosition);
+    LEDManagement::set_led_at(firstCell, Pins::firstCellPosition);
+    LEDManagement::set_led_at(secondCell, Pins::secondCellPosition);
+    LEDManagement::set_led_at(thirdCell, Pins::thirdCellPosition);
     LEDManagement::set_updated(true);
   }
 

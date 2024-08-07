@@ -90,9 +90,9 @@ public:
       break;
     }
     counter--;
-    LEDManagement::set_led_at(first_cell, 6);
-    LEDManagement::set_led_at(second_cell, 13);
-    LEDManagement::set_led_at(third_cell, 20);
+    LEDManagement::set_led_at(first_cell, Pins::firstCellPosition);
+    LEDManagement::set_led_at(second_cell, Pins::secondCellPosition);
+    LEDManagement::set_led_at(third_cell, Pins::thirdCellPosition);
     LEDManagement::set_updated(true);
   }
 
