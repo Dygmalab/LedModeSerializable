@@ -39,6 +39,7 @@ public:
     uint8_t deSerialize(const uint8_t *input) override
     {
         uint8_t index = LedModeSerializable::deSerialize(input);
+        base_settings.delay_ms = 110;
         return ++index;
     }
 
@@ -60,7 +61,6 @@ public:
 
         // Precompute the hue values for each row
         uint8_t rowHues[Pins::NUM_ROWS];
-
         for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
             rowHues[row] = (baseHue + row * hueStep) % 255;
@@ -69,9 +69,14 @@ public:
         // Iterate over each row
         for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
+            if (row >= sizeof(Pins::NUM_COLS) / sizeof(Pins::NUM_COLS[0]))
+            {
+                return;
+            }
             RGBW rainbow = calculateRGBWFromHue(rowHues[row]);
             for (uint8_t i = 0; i < Pins::NUM_COLS[row]; ++i)
             {
+
                 setLEDColor(row, i, Pins::NUM_COLS, rainbow);
             }
         }
@@ -89,7 +94,8 @@ public:
 private:
     uint16_t rainbowHue = 0;
 
-    RGBW calculateRGBWFromHue(uint8_t hue) {
+    RGBW calculateRGBWFromHue(uint8_t hue)
+    {
         RGBW rainbow;
         uint8_t region = hue / 43;
         uint8_t remainder = (hue - (region * 43)) * 6;
@@ -132,7 +138,8 @@ private:
         return rainbow;
     }
 
-    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) {
+    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color)
+    {
         // Calculate the LED index in the LED array
         uint8_t ledIndex = col;
         for (uint8_t j = 0; j < row; ++j)
@@ -158,7 +165,6 @@ private:
             RGBW color = calculateRGBWFromHue(hue);
             LEDManagement::set_ug_at(color, i);
         }
-
     }
 };
 
