@@ -46,41 +46,37 @@ public:
 
     void update() override
     {
-        // Asegurarse de que el valor de matiz (hue) esté en el rango correcto
+        // Ensure the hue value is within the correct range
         if (rainbowHue >= 255)
         {
             rainbowHue -= 255;
         }
 
-        // Determinar el valor base de matiz (hue) para el arco iris
+        // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
 
-        // Número de LEDs en cada fila
-        const uint8_t NUM_ROWS = 6;
-        const uint8_t NUM_COLS[NUM_ROWS] =  {7, 7, 7, 6, 4, 4};
+        // Calculate the step between rows based on the number of rows
+        uint8_t hueStep = 255 / Pins::NUM_ROWS;
 
-        // Calcular el paso entre filas basado en la cantidad de filas
-        uint8_t hueStep = 255 / NUM_ROWS;
+        // Precompute the hue values for each row
+        uint8_t rowHues[Pins::NUM_ROWS];
 
-        // Precomputar los valores de matiz (hue) para cada fila
-        uint8_t rowHues[NUM_ROWS];
-
-        for (uint8_t row = 0; row < NUM_ROWS; ++row)
+        for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
             rowHues[row] = (baseHue + row * hueStep) % 255;
         }
 
-        // Iterar sobre cada fila
-        for (uint8_t row = 0; row < NUM_ROWS; ++row)
+        // Iterate over each row
+        for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
             RGBW rainbow = calculateRGBWFromHue(rowHues[row]);
-            for (uint8_t i = 0; i < NUM_COLS[row]; ++i)
+            for (uint8_t i = 0; i < Pins::NUM_COLS[row]; ++i)
             {
-                setLEDColor(row, i, NUM_COLS, rainbow);
+                setLEDColor(row, i, Pins::NUM_COLS, rainbow);
             }
         }
 
-        // Incrementar el valor de matiz (hue) base para el próximo ciclo
+        // Increment the base hue value for the next cycle
         rainbowHue++;
 
         update_underglow_leds();
@@ -131,33 +127,33 @@ private:
                 rainbow.b = 255 - remainder;
                 break;
         }
-        rainbow.w = 0; // Apagar el componente blanco
+        rainbow.w = 0; // Turn off the white component
 
         return rainbow;
     }
 
     void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) {
-        // Calcular el índice del LED en la matriz de LEDs
+        // Calculate the LED index in the LED array
         uint8_t ledIndex = col;
         for (uint8_t j = 0; j < row; ++j)
         {
             ledIndex += NUM_COLS[j];
         }
-       LEDManagement::set_led_at(color, ledIndex);
+        LEDManagement::set_led_at(color, ledIndex);
     }
 
     void update_underglow_leds()
     {
-        // Determinar el valor base de matiz (hue) para el arco iris
+        // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
 
-        // Número de LEDs en la tira
+        // Number of LEDs in the strip
         const uint8_t NUM_LEDS = 53;
 
-        // Iterar sobre cada LED
+        // Iterate over each LED
         for (uint8_t i = 0; i < Pins::MAX_UG_LEDS; ++i)
         {
-            // Calcular el color del arco iris basado en la posición del LED y el matiz base
+            // Calculate the rainbow color based on the LED position and the base hue
             uint8_t hue = (baseHue + ((i - Pins::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
             RGBW color = calculateRGBWFromHue(hue);
             LEDManagement::set_ug_at(color, i);

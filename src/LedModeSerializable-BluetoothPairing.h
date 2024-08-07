@@ -113,7 +113,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(4 - advertising_id);
-        setUnderglowLEDS();
+        setUnderglowLEDS(Pins::UG_LEDS_RIGHT);
       }
     }
     else
@@ -140,7 +140,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(advertising_id);
-        setUnderglowLEDS();
+        setUnderglowLEDS(Pins::UG_LEDS_LEFT);
       }
     }
     if (erease_done)
@@ -160,7 +160,7 @@ public:
     {
       counter = 0;
       erease_done = false;
-      LEDManagement::set_all_leds(ledOff);
+      LEDManagement::set_all_leds(ledOff, true);
       ledIsOn = false; // Reset LED state
       return;          // Terminate early if counter has reached its max
     }
@@ -170,46 +170,23 @@ public:
     { // Wait for 1000ms
       if (ledIsOn)
       {
-        LEDManagement::set_all_leds(ledOff);
+        LEDManagement::set_all_leds(ledOff , true);
       }
       else
       {
-        LEDManagement::set_all_leds(blue);
+        LEDManagement::set_all_leds(blue,true);
       }
       ledIsOn = !ledIsOn; // Toggle LED state
       lastExecutionTime = currentTime;
       counter++;
     }
   }
-#ifdef RAISE2
-  void setUnderglowLEDS()
-  {
-    if (underglow_led_id > NUMBER_OF_LEDS)
-    {
-      underglow_led_id = Pins::BL_LEDS_RIGHT;
-    }
-    LEDManagement::set_led_at(blue, underglow_led_id);
 
-    if (underglow_led_id - 1 != Pins::BL_LEDS_RIGHT - 1)
+    void setUnderglowLEDS( uint8_t ug_leds)
     {
-      LEDManagement::set_led_at(ledOff, underglow_led_id - 1);
-    }
-    if (underglow_led_id + 1 > NUMBER_OF_LEDS)
-    {
-      LEDManagement::set_led_at(blue, Pins::BL_LEDS_RIGHT);
-    }
-    else
-    {
-      LEDManagement::set_led_at(blue, underglow_led_id + 1);
-    }
-    underglow_led_id++;
-  }
-#else
-    void setUnderglowLEDS()
-    {
-      const uint8_t MAX_UG_LEDS = Pins::MAX_UG_LEDS; // Suponiendo que Pins::MAX_UG_LEDS define el número máximo de LEDs
-      const uint8_t MAX_LED_ID = MAX_UG_LEDS; // Definir el valor máximo del ID del LED
-      const uint8_t WRAP_AROUND_LED_ID = 0; // Definir el valor de envoltura para el ID del LED
+      const uint8_t MAX_UG_LEDS = ug_leds;
+      const uint8_t MAX_LED_ID = MAX_UG_LEDS;
+      const uint8_t WRAP_AROUND_LED_ID = 0;
 
       // Apagar todos los LEDs primero
       for (uint8_t i = 0; i < MAX_UG_LEDS; ++i)
