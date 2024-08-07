@@ -90,9 +90,21 @@ public:
       break;
     }
     counter--;
-    LEDManagement::set_led_at(first_cell, Pins::firstCellPosition);
-    LEDManagement::set_led_at(second_cell, Pins::secondCellPosition);
-    LEDManagement::set_led_at(third_cell, Pins::thirdCellPosition);
+    if(gpio_get(Pins::SIDE_ID))
+    {
+     //Right side
+        LEDManagement::set_led_at(first_cell, Pins::FIRST_CELL_POS_RIGHT);
+        LEDManagement::set_led_at(second_cell, Pins::SECOND_CELL_POS_RIGHT);
+        LEDManagement::set_led_at(third_cell, Pins::THIRD_CELL_POS_RIGHT);
+    }
+    else
+    {
+     //Lefts side
+        LEDManagement::set_led_at(first_cell, Pins::FIRST_CELL_POS_LEFT);
+        LEDManagement::set_led_at(second_cell, Pins::SECOND_CELL_POS_LEFT);
+        LEDManagement::set_led_at(third_cell, Pins::THIRD_CELL_POS_LEFT);
+    }
+
     LEDManagement::set_updated(true);
   }
 
