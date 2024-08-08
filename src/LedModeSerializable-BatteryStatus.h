@@ -129,11 +129,12 @@ private:
   static inline RGBW secondCell = {0, 0, 0, 0};
   static inline RGBW thirdCell = {0, 0, 0, 0};
 
+  static inline uint8_t thirdCellPosition = 0;
+
   static constexpr RGBW green = {0, 255, 0, 0};
   static constexpr RGBW red = {255, 0, 0, 0};
   static constexpr RGBW ledOff = {0, 0, 0, 0};
 
-  static constexpr uint8_t thirdCellPosition = 20;
   static constexpr uint8_t charging_time_led_effect = 160;
   static void setLedState(const RGBW &first, const RGBW &second, const RGBW &third)
   {
@@ -145,31 +146,56 @@ private:
 
   static void updateLedEffect()
   {
-    LEDManagement::set_led_at(firstCell, 6);
-    LEDManagement::set_led_at(secondCell, 13);
-    LEDManagement::set_led_at(thirdCell, thirdCellPosition);
+      if(gpio_get(Pins::SIDE_ID))
+      {
+          //Right side
+          LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_RIGHT);
+          LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_RIGHT);
+          LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_RIGHT);
+          thirdCellPosition = Pins::THIRD_CELL_POS_RIGHT;
+      }
+      else
+      {
+          //Lefts side
+          LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_LEFT);
+          LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_LEFT);
+          LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_LEFT);
+          thirdCellPosition = Pins::THIRD_CELL_POS_LEFT;
+      }
     LEDManagement::set_updated(true);
   }
 
   static void breathe(uint8_t cellPosition)
   {
-    uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 3;
+      if(gpio_get(Pins::SIDE_ID))
+      {
+          //Right side
+          thirdCellPosition = Pins::THIRD_CELL_POS_RIGHT;
+      }
+      else
+      {
+          //Lefts side
+          thirdCellPosition = Pins::THIRD_CELL_POS_LEFT;
+      }
 
-    if (i & 0x80)
-    {
-      i = 255 - i;
-    }
+      uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 4;
 
-    i = i << 1;
-    uint8_t ii = (i * i) >> 8;
-    uint8_t iii = (ii * i) >> 8;
+      if (i & 0x80)
+      {
+          i = 255 - i;
+      }
 
-    i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
+      i = i << 1;
+      uint8_t ii = (i * i) >> 8;
+      uint8_t iii = (ii * i) >> 8;
 
-    RGBW breathe = LEDManagement::HSVtoRGB(0, 255, i);
-    breathe.w = 0;
+      i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
-    LEDManagement::set_led_at(breathe, cellPosition);
+      RGBW breathe = LEDManagement::HSVtoRGB(0, 255 , i);
+      breathe.w = 0;
+      printf("Breathe: %d %d %d %d\n", breathe.r, breathe.g, breathe.b, breathe.w);
+      LEDManagement::set_led_at(breathe, thirdCellPosition);
+      LEDManagement::set_updated(true);
   }
 #endif
 };

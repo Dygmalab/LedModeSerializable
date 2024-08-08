@@ -113,7 +113,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(4 - advertising_id);
-        setUnderglowLEDS();
+        setUnderglowLEDS(Pins::UG_LEDS_RIGHT);
       }
     }
     else
@@ -140,7 +140,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(advertising_id);
-        setUnderglowLEDS();
+        setUnderglowLEDS(Pins::UG_LEDS_LEFT);
       }
     }
     if (erease_done)
@@ -160,7 +160,7 @@ public:
     {
       counter = 0;
       erease_done = false;
-      LEDManagement::set_all_leds(ledOff);
+      LEDManagement::set_all_leds(ledOff, true);
       ledIsOn = false; // Reset LED state
       return;          // Terminate early if counter has reached its max
     }
@@ -170,62 +170,50 @@ public:
     { // Wait for 1000ms
       if (ledIsOn)
       {
-        LEDManagement::set_all_leds(ledOff);
+        LEDManagement::set_all_leds(ledOff , true);
       }
       else
       {
-        LEDManagement::set_all_leds(blue);
+        LEDManagement::set_all_leds(blue,true);
       }
       ledIsOn = !ledIsOn; // Toggle LED state
       lastExecutionTime = currentTime;
       counter++;
     }
   }
-#ifdef RAISE2
-  void setUnderglowLEDS()
-  {
-    if (underglow_led_id > NUMBER_OF_LEDS)
-    {
-      underglow_led_id = Pins::BL_LEDS_RIGHT;
-    }
-    LEDManagement::set_led_at(blue, underglow_led_id);
 
-    if (underglow_led_id - 1 != Pins::BL_LEDS_RIGHT - 1)
+    void setUnderglowLEDS( uint8_t ug_leds)
     {
-      LEDManagement::set_led_at(ledOff, underglow_led_id - 1);
+      const uint8_t MAX_UG_LEDS = ug_leds;
+      const uint8_t MAX_LED_ID = MAX_UG_LEDS;
+      const uint8_t WRAP_AROUND_LED_ID = 0;
+
+      // Apagar todos los LEDs primero
+      for (uint8_t i = 0; i < MAX_UG_LEDS; ++i)
+      {
+        LEDManagement::set_ug_at(ledOff, i);
+      }
+
+      // Encender el LED actual y el siguiente
+      LEDManagement::set_ug_at(blue, underglow_led_id);
+
+      if (underglow_led_id + 1 > MAX_LED_ID)
+      {
+        LEDManagement::set_ug_at(blue, WRAP_AROUND_LED_ID);
+      }
+      else
+      {
+        LEDManagement::set_ug_at(blue, underglow_led_id + 1);
+      }
+
+      // Incrementar el valor de underglow_led_id
+      underglow_led_id++;
+      if (underglow_led_id > MAX_LED_ID)
+      {
+        underglow_led_id = 0;
+      }
     }
-    if (underglow_led_id + 1 > NUMBER_OF_LEDS)
-    {
-      LEDManagement::set_led_at(blue, Pins::BL_LEDS_RIGHT);
-    }
-    else
-    {
-      LEDManagement::set_led_at(blue, underglow_led_id + 1);
-    }
-    underglow_led_id++;
-  }
-#else
-  void setUnderglowLEDS()
-  {
-    if (underglow_led_id > 88)
-    {
-      underglow_led_id = 35;
-    }
-    LEDManagement::set_led_at(blue, underglow_led_id);
-    if (underglow_led_id - 1 != 34)
-    {
-      LEDManagement::set_led_at(ledOff, underglow_led_id - 1);
-    }
-    if (underglow_led_id + 1 > 88)
-    {
-      LEDManagement::set_led_at(blue, 35);
-    }
-    else
-    {
-      LEDManagement::set_led_at(blue, underglow_led_id + 1);
-    }
-    underglow_led_id++;
-  }
+
 #endif
 
   void breathe(uint8_t channel_id)
@@ -250,7 +238,7 @@ public:
 
     LEDManagement::set_led_at(breathe, channel_id + 1);
   }
-#endif
+
   uint8_t paired_channels_;
   uint8_t connected_channel_id_;
   uint8_t advertising_id;
@@ -272,7 +260,7 @@ private:
   };
   std::vector<RGBW> key_color{5};
   std::vector<uint8_t> is_paired{5};
-  uint8_t underglow_led_id = 36;
+  uint8_t underglow_led_id = 0;
 #endif
 };
 
