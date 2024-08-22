@@ -39,7 +39,8 @@ public:
     uint8_t deSerialize(const uint8_t *input) override
     {
         uint8_t index = LedModeSerializable::deSerialize(input);
-        base_settings.delay_ms = 110;
+        base_settings.delay_ms = 51;
+
         return ++index;
     }
 
@@ -53,6 +54,16 @@ public:
             rainbowHue -= 255;
         }
 
+
+
+        if (gpio_get(Pins::SIDE_ID))
+        {
+            p_rainbow_col = &Pins::NUM_COLS_RIGHT[0];
+        }
+        else
+        {
+            p_rainbow_col = &Pins::NUM_COLS_LEFT[0];
+        }
         // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
 
@@ -69,15 +80,11 @@ public:
         // Iterate over each row
         for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
-            if (row >= sizeof(Pins::NUM_COLS) / sizeof(Pins::NUM_COLS[0]))
-            {
-                return;
-            }
             RGBW rainbow = calculateRGBWFromHue(rowHues[row]);
-            for (uint8_t i = 0; i < Pins::NUM_COLS[row]; ++i)
+            for (uint8_t i = 0; i < p_rainbow_col[row]; ++i)
             {
 
-                setLEDColor(row, i, Pins::NUM_COLS, rainbow);
+                setLEDColor(row, i, p_rainbow_col, rainbow);
             }
         }
 
@@ -94,7 +101,9 @@ public:
 private:
     uint16_t rainbowHue = 0;
 
-    RGBW calculateRGBWFromHue(uint8_t hue)
+    const uint8_t *p_rainbow_col;
+
+    RGBW calculateRGBWFromHue(uint8_t hue) const
     {
         RGBW rainbow;
         uint8_t region = hue / 43;
@@ -138,7 +147,7 @@ private:
         return rainbow;
     }
 
-    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color)
+    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) const
     {
         // Calculate the LED index in the LED array
         uint8_t ledIndex = col;
@@ -149,7 +158,7 @@ private:
         LEDManagement::set_led_at(color, ledIndex);
     }
 
-    void update_underglow_leds()
+    void update_underglow_leds() const
     {
         // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
