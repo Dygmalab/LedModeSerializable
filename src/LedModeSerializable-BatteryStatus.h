@@ -152,7 +152,6 @@ private:
           LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_RIGHT);
           LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_RIGHT);
           LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_RIGHT);
-          thirdCellPosition = Pins::THIRD_CELL_POS_RIGHT;
       }
       else
       {
@@ -160,9 +159,8 @@ private:
           LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_LEFT);
           LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_LEFT);
           LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_LEFT);
-          thirdCellPosition = Pins::THIRD_CELL_POS_LEFT;
       }
-    LEDManagement::set_updated(true);
+    LEDManagement::set_updated(true, true);
   }
 
   static void breathe(uint8_t cellPosition)
