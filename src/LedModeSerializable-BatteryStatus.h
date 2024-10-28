@@ -121,6 +121,10 @@ public:
         breathe(thirdCellPosition);
       }
       break;
+    case BatteryManagement::FAULT:
+    case BatteryManagement::UNKNOWN:
+#warning "We are currently ignoring the Battery FAULT and UNKNOWN statuses"
+      break;
     }
   }
 

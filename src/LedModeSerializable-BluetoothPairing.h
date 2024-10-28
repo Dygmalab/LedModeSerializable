@@ -218,8 +218,6 @@ public:
 
   void breathe(uint8_t channel_id)
   {
-    static bool led_on = true;
-    static uint32_t lastExecutionTime = 0;
     uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 3;
 
     if (i & 0x80)
