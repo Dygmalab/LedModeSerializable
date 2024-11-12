@@ -43,63 +43,24 @@ public:
 
     void update() override
     {
-        // Incrementar el valor de matiz (hue) para el arco iris
 
-      rainbowHue++;
+        rainbowHue = (rainbowHue + 1) % 255;
 
-        // Asegurarse de que el valor de matiz (hue) esté en el rango correcto
-        if (rainbowHue >= 255)
-        {
-            rainbowHue -= 255;
-        }
-
-        // Convertir el valor de matiz (hue) directamente en un color RGB
-        RGBW rainbow;
-        switch (rainbowHue / 43)
-        {
-        case 0:
-            rainbow.r = 255;
-            rainbow.g = rainbowHue * 6;
-            rainbow.b = 0;
-            break;
-        case 1:
-            rainbow.r = 255 - (rainbowHue - 43) * 6;
-            rainbow.g = 255;
-            rainbow.b = 0;
-            break;
-        case 2:
-            rainbow.r = 0;
-            rainbow.g = 255;
-            rainbow.b = (rainbowHue - 86) * 6;
-            break;
-        case 3:
-            rainbow.r = 0;
-            rainbow.g = 255 - (rainbowHue - 129) * 6;
-            rainbow.b = 255;
-            break;
-        case 4:
-            rainbow.r = (rainbowHue - 172) * 6;
-            rainbow.g = 0;
-            rainbow.b = 255;
-            break;
-        default:
-            rainbow.r = 255;
-            rainbow.g = 0;
-            rainbow.b = 255 - (rainbowHue - 215) * 6;
-            break;
-        }
-
-        // Establecer la luminosidad y apagar el componente blanco
+        RGBW rainbow = calculateRGBWFromHue(rainbowHue);
         rainbow.w = 0;
 
-        // Actualizar los LEDs con el color arco iris calculado
         LEDManagement::set_all_leds(rainbow);
         LEDManagement::set_updated(true);
     }
 #endif
 
 private:
- uint8_t rainbowHue = 0;
+    static RGBW calculateRGBWFromHue(uint8_t hue)
+    {
+        return LEDManagement::hueTable[hue];
+    }
+
+    uint8_t rainbowHue = 0;
 };
 
 static LedModeSerializable_Rainbow ledModeSerializableRainbow{CRC32_STR("LedModeSerializable_Rainbow")};

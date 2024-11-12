@@ -54,16 +54,6 @@ public:
             rainbowHue -= 255;
         }
 
-
-
-        if (gpio_get(Pins::SIDE_ID))
-        {
-            p_rainbow_col = &Pins::NUM_COLS_RIGHT[0];
-        }
-        else
-        {
-            p_rainbow_col = &Pins::NUM_COLS_LEFT[0];
-        }
         // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
 
@@ -75,6 +65,15 @@ public:
         for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
         {
             rowHues[row] = (baseHue + row * hueStep) % 255;
+        }
+
+        if (gpio_get(Pins::SIDE_ID))
+        {
+            p_rainbow_col = &Pins::NUM_COLS_RIGHT[0];
+        }
+        else
+        {
+            p_rainbow_col = &Pins::NUM_COLS_LEFT[0];
         }
 
         // Iterate over each row
@@ -101,50 +100,13 @@ public:
 private:
     uint16_t rainbowHue = 0;
 
+    uint8_t rowHues[Pins::NUM_ROWS];
+
     const uint8_t *p_rainbow_col;
 
-    RGBW calculateRGBWFromHue(uint8_t hue) const
+    static RGBW calculateRGBWFromHue(uint8_t hue)
     {
-        RGBW rainbow;
-        uint8_t region = hue / 43;
-        uint8_t remainder = (hue - (region * 43)) * 6;
-
-        switch (region)
-        {
-            case 0:
-                rainbow.r = 255;
-                rainbow.g = remainder;
-                rainbow.b = 0;
-                break;
-            case 1:
-                rainbow.r = 255 - remainder;
-                rainbow.g = 255;
-                rainbow.b = 0;
-                break;
-            case 2:
-                rainbow.r = 0;
-                rainbow.g = 255;
-                rainbow.b = remainder;
-                break;
-            case 3:
-                rainbow.r = 0;
-                rainbow.g = 255 - remainder;
-                rainbow.b = 255;
-                break;
-            case 4:
-                rainbow.r = remainder;
-                rainbow.g = 0;
-                rainbow.b = 255;
-                break;
-            default:
-                rainbow.r = 255;
-                rainbow.g = 0;
-                rainbow.b = 255 - remainder;
-                break;
-        }
-        rainbow.w = 0; // Turn off the white component
-
-        return rainbow;
+        return LEDManagement::hueTable[hue];
     }
 
     void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) const
@@ -153,23 +115,18 @@ private:
         uint8_t ledIndex = col;
         for (uint8_t j = 0; j < row; ++j)
         {
-            ledIndex += NUM_COLS[j];
+            ledIndex += p_rainbow_col[j];
         }
         LEDManagement::set_led_at(color, ledIndex);
     }
 
     void update_underglow_leds() const
     {
-        // Determine the base hue value for the rainbow
         uint8_t baseHue = rainbowHue % 255;
-
-        // Number of LEDs in the strip
         const uint8_t NUM_LEDS = 53;
 
-        // Iterate over each LED
         for (uint8_t i = 0; i < Pins::MAX_UG_LEDS; ++i)
         {
-            // Calculate the rainbow color based on the LED position and the base hue
             uint8_t hue = (baseHue + ((i - Pins::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
             RGBW color = calculateRGBWFromHue(hue);
             LEDManagement::set_ug_at(color, i);

@@ -64,46 +64,54 @@ public:
     const uint8_t batteryLevel = BatteryManagement::getBatteryPercentage();
     const BatteryManagement::BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
 
-    uint16_t current_time = (uint16_t)to_ms_since_boot(get_absolute_time());
-    static uint16_t last_execution_time = 0;
+    uint32_t current_time = to_ms_since_boot(get_absolute_time());
+    static uint32_t last_execution_time = 0;
 
     switch (batteryStatus)
     {
     case BatteryManagement::CHARGING_DONE:
+    {
       setLedState(green, green, green);
-      break;
+    }
+    break;
+
     case BatteryManagement::CHARGING:
-      static enum {
-        FIRST_CELL,
-        SECOND_CELL,
-        THIRD_CELL,
-        NO_CELL,
-      } currentCell = NO_CELL;
-      if (current_time - last_execution_time > charging_time_led_effect)
-      {
-        last_execution_time = current_time;
-        switch (currentCell)
+    {
+        static enum {
+            FIRST_CELL,
+            SECOND_CELL,
+            THIRD_CELL,
+            NO_CELL,
+        } currentCell = NO_CELL;
+
+        if (current_time - last_execution_time > charging_time_led_effect)
         {
-        case NO_CELL:
-          setLedState(ledOff, ledOff, ledOff);
-          currentCell = THIRD_CELL;
-          break;
-        case THIRD_CELL:
-          setLedState(ledOff, ledOff, green);
-          currentCell = SECOND_CELL;
-          break;
-        case SECOND_CELL:
-          setLedState(ledOff, green, green);
-          currentCell = FIRST_CELL;
-          break;
-        case FIRST_CELL:
-          setLedState(green, green, green);
-          currentCell = NO_CELL;
-          break;
+            last_execution_time = current_time;
+            switch (currentCell)
+            {
+                case NO_CELL:
+                    setLedState(ledOff, ledOff, ledOff);
+                    currentCell = THIRD_CELL;
+                    break;
+                case THIRD_CELL:
+                    setLedState(ledOff, ledOff, green);
+                    currentCell = SECOND_CELL;
+                    break;
+                case SECOND_CELL:
+                    setLedState(ledOff, green, green);
+                    currentCell = FIRST_CELL;
+                    break;
+                case FIRST_CELL:
+                    setLedState(green, green, green);
+                    currentCell = NO_CELL;
+                    break;
+            }
         }
-      }
-      break;
+    }
+    break;
+
     case BatteryManagement::NOT_CHARGHING:
+    {
       if (batteryLevel > 70)
       {
         setLedState(green, green, green);
@@ -118,13 +126,38 @@ public:
       }
       else
       {
-        breathe(thirdCellPosition);
+          if(gpio_get(Pins::SIDE_ID))
+          {
+              breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_RIGHT);
+          }
+          else
+          {
+            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_LEFT);
+          }
       }
-      break;
-    case BatteryManagement::FAULT:
-    case BatteryManagement::UNKNOWN:
-#warning "We are currently ignoring the Battery FAULT and UNKNOWN statuses"
-      break;
+    }
+    break;
+
+    default:
+    {
+        //TODO: discuss with the team, if this is the correct way to handle the default case.
+        //For now let's just comment it out.
+/*        if(gpio_get(Pins::SIDE_ID))
+        {
+            //Right side
+            breathe_at(thirdCellPosition,Pins::FIRST_CELL_POS_RIGHT);
+            breathe_at(secondCellPosition,Pins::SECOND_CELL_POS_RIGHT);
+            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_RIGHT);
+        }
+        else
+        {
+            //Left side
+            breathe_at(thirdCellPosition,Pins::FIRST_CELL_POS_LEFT);
+            breathe_at(secondCellPosition,Pins::SECOND_CELL_POS_LEFT);
+            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_LEFT);
+        }*/
+    }
+    break;
     }
   }
 
@@ -133,6 +166,8 @@ private:
   static inline RGBW secondCell = {0, 0, 0, 0};
   static inline RGBW thirdCell = {0, 0, 0, 0};
 
+  static inline uint8_t firstCellPosition = 0;
+  static inline uint8_t secondCellPosition = 0;
   static inline uint8_t thirdCellPosition = 0;
 
   static constexpr RGBW green = {0, 255, 0, 0};
@@ -167,17 +202,17 @@ private:
     LEDManagement::set_updated(true, true);
   }
 
-  static void breathe(uint8_t cellPosition)
+  static void breathe_at(uint8_t cellPosition, uint8_t cell)
   {
       if(gpio_get(Pins::SIDE_ID))
       {
           //Right side
-          thirdCellPosition = Pins::THIRD_CELL_POS_RIGHT;
+          cellPosition = cell;
       }
       else
       {
           //Lefts side
-          thirdCellPosition = Pins::THIRD_CELL_POS_LEFT;
+          cellPosition = cell;
       }
 
       uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 4;
@@ -196,7 +231,7 @@ private:
       RGBW breathe = LEDManagement::HSVtoRGB(0, 255 , i);
       breathe.w = 0;
       printf("Breathe: %d %d %d %d\n", breathe.r, breathe.g, breathe.b, breathe.w);
-      LEDManagement::set_led_at(breathe, thirdCellPosition);
+      LEDManagement::set_led_at(breathe, cellPosition);
       LEDManagement::set_updated(true);
   }
 #endif
