@@ -120,7 +120,7 @@ public:
       {
         setLedState(ledOff, green, green);
       }
-      else if (batteryLevel > 10)
+      else if (batteryLevel > 20)
       {
         setLedState(ledOff, ledOff, green);
       }
