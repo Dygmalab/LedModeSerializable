@@ -67,7 +67,7 @@ public:
             rowHues[row] = (baseHue + row * hueStep) % 255;
         }
 
-        if (gpio_get(Pins::SIDE_ID))
+        if (KsConfig::get_side() == KsConfig::Side::RIGHT)
         {
             p_rainbow_col = &Pins::NUM_COLS_RIGHT[0];
         }

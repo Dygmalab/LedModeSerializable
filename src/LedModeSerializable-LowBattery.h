@@ -90,7 +90,7 @@ public:
       break;
     }
     counter--;
-    if(gpio_get(Pins::SIDE_ID))
+    if(KsConfig::get_side() == KsConfig::Side::RIGHT)
     {
      //Right side
         LEDManagement::set_led_at(first_cell, Pins::FIRST_CELL_POS_RIGHT);

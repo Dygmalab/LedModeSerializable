@@ -126,7 +126,7 @@ public:
       }
       else
       {
-          if(gpio_get(Pins::SIDE_ID))
+          if(KsConfig::get_side() == KsConfig::Side::RIGHT)
           {
               breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_RIGHT);
           }
@@ -142,7 +142,7 @@ public:
     {
         //TODO: discuss with the team, if this is the correct way to handle the default case.
         //For now let's just comment it out.
-/*        if(gpio_get(Pins::SIDE_ID))
+/*        if(KsConfig::get_side() == KsConfig::Side::RIGHT)
         {
             //Right side
             breathe_at(thirdCellPosition,Pins::FIRST_CELL_POS_RIGHT);
@@ -185,7 +185,7 @@ private:
 
   static void updateLedEffect()
   {
-      if(gpio_get(Pins::SIDE_ID))
+      if(KsConfig::get_side() == KsConfig::Side::RIGHT)
       {
           //Right side
           LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_RIGHT);
@@ -204,7 +204,7 @@ private:
 
   static void breathe_at(uint8_t cellPosition, uint8_t cell)
   {
-      if(gpio_get(Pins::SIDE_ID))
+      if(KsConfig::get_side() == KsConfig::Side::RIGHT)
       {
           //Right side
           cellPosition = cell;
