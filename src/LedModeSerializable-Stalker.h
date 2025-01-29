@@ -254,7 +254,7 @@ public:
           map[i][j] = 0xFF;
           uint8_t led_position;
 #ifdef RAISE2
-          if (gpio_get(Pins::SIDE_ID))
+          if (KsConfig::get_side() == KsConfig::Side::RIGHT)
           {
             led_position = pos_right[i][j];
             DBG_PRINTF_TRACE("pos: %i, %i\n", i, j);
