@@ -30,7 +30,16 @@
 
 class LedModeCommunication {
  protected:
-  static void sendLedMode(LedModeSerializable &led_mode_serializable) {
+  static void sendLedMode(LedModeSerializable &led_mode_serializable)
+  {
+      uint8_t mode_index = ::LEDControl.get_mode_index();
+
+      if(!Communications.is_host_connected() && mode_index == 0)
+      {
+          // If the host is not connected, we should not update the mode and show the user layers.
+          return;
+      }
+
     Communications_protocol::Packet packet{};
     packet.header.command = Communications_protocol::MODE_LED;
     packet.header.size    = led_mode_serializable.serialize(packet.data);
