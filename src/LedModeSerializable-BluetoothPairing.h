@@ -214,8 +214,6 @@ public:
       }
     }
 
-#endif
-
   void breathe(uint8_t channel_id)
   {
     uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 3;
@@ -236,6 +234,9 @@ public:
 
     LEDManagement::set_led_at(breathe, channel_id + 1);
   }
+#endif
+
+
 
   uint8_t paired_channels_;
   uint8_t connected_channel_id_;

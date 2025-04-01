@@ -26,7 +26,9 @@
 
 #include "LedModeSerializable.h"
 #include "cstdio"
+#ifdef KEYSCANNER
 #include "LEDManagement.hpp"
+#endif
 
 class LedModeSerializable_RainbowWave : public LedModeSerializable
 {
@@ -99,7 +101,7 @@ public:
 
 private:
     uint16_t rainbowHue = 0;
-
+#ifdef KEYSCANNER
     uint8_t rowHues[Pins::NUM_ROWS];
 
     const uint8_t *p_rainbow_col;
@@ -132,6 +134,7 @@ private:
             LEDManagement::set_ug_at(color, i);
         }
     }
+#endif
 };
 
 static LedModeSerializable_RainbowWave ledModeSerializableRainbowWave{CRC32_STR("LedModeSerializable_RainbowWave")};
