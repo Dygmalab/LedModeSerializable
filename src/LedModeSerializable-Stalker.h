@@ -99,7 +99,7 @@ public:
 
     // Calcular el paso entre LEDs basado en la cantidad de LEDs y el multiplicador
     uint8_t hueStep = 255 / NUMBER_OF_LEDS;
-    uint8_t hueOffset = (gpio_get(25)) ? hueStep : 0;
+    uint8_t hueOffset = (KsConfig::get_side()) ? hueStep : 0;
 
     // Iterar sobre cada LED y establecer su color correspondiente
     // Calcular el valor de matiz (hue) para el LED actual con un desplazamiento

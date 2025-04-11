@@ -89,7 +89,7 @@ public:
         is_paired[i + 1] = 0;
       }
     }
-    if (gpio_get(25))
+    if (KsConfig::get_side())
     { // Right side
       LEDManagement::set_led_at(yellow, 6);
       for (int i = 5; i >= 1; --i)
