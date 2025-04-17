@@ -194,7 +194,7 @@ public:
   void updateLEDs()
   {
     // Obtiene el tiempo actualk,nkm,l.hjñ{oiy
-    uint32_t currentTime = to_ms_since_boot(get_absolute_time());
+    uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
     // k Itera sobre cada LED
     for (uint8_t i = 0; i < NUM_LEDS; i++)
@@ -232,14 +232,14 @@ public:
     turnOnLED(keyIndex);
 
     // Guarda el tiempo en que se presionó la tecla
-    keypress_leds[keyIndex] = to_ms_since_boot(get_absolute_time());
+    keypress_leds[keyIndex] = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
     // Establece la bandera de tecla presionada en verdadero
   }
 
   void update() override
   {
-    uint32_t currentTime = to_ms_since_boot(get_absolute_time());
+    uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     static uint32_t last_time = currentTime;
 
     uint8_t data[Pins::ROWS]{};

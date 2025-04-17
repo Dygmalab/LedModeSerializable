@@ -165,7 +165,7 @@ public:
       return;          // Terminate early if counter has reached its max
     }
 
-    uint32_t currentTime = to_ms_since_boot(get_absolute_time());
+    uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     if (currentTime - lastExecutionTime >= 1000)
     { // Wait for 1000ms
       if (ledIsOn)
@@ -218,7 +218,7 @@ public:
 
   void breathe(uint8_t channel_id)
   {
-    uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 3;
+    uint8_t i = ((uint16_t)hal_mcu_systim_ms_get(hal_mcu_systim_counter_get())) >> 3;
 
     if (i & 0x80)
     {

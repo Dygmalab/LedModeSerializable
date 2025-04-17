@@ -64,7 +64,7 @@ public:
     const uint8_t batteryLevel = BatteryManagement::getBatteryPercentage();
     const BatteryManagement::BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
 
-    uint32_t current_time = to_ms_since_boot(get_absolute_time());
+    uint32_t current_time = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     static uint32_t last_execution_time = 0;
 
     switch (batteryStatus)
@@ -215,7 +215,7 @@ private:
           cellPosition = cell;
       }
 
-      uint8_t i = ((uint16_t)to_ms_since_boot(get_absolute_time())) >> 4;
+      uint8_t i = ((uint16_t)hal_mcu_systim_ms_get(hal_mcu_systim_counter_get())) >> 4;
 
       if (i & 0x80)
       {
