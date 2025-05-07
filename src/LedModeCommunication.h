@@ -47,7 +47,6 @@ private:
       // and you disconnect and reconnect the side, the keyboard will not show the layers.
       if(!Communications.is_host_connected() && layer_mode_set())
       {
-          NRF_LOG_INFO("Host not connected, not sending LED mode");
           return;
       }
 
