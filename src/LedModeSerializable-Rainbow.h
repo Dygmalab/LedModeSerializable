@@ -55,11 +55,12 @@ public:
 #endif
 
 private:
+#ifdef KEYSCANNER
     static RGBW calculateRGBWFromHue(uint8_t hue)
     {
         return LEDManagement::hueTable[hue];
     }
-
+#endif
     uint8_t rainbowHue = 0;
 };
 

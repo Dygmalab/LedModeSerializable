@@ -28,13 +28,32 @@
 #include "Communications_protocol.h"
 #include "Communications.h"
 
-class LedModeCommunication {
+class LedModeCommunication
+{
+private:
+    /*
+     *  Check if the mode is set to layer mode. Mode 0 is the layer mode.
+     * */
+    static bool layer_mode_set ()
+    {
+        return ::LEDControl.get_mode_index() == 0;
+    }
  protected:
-  static void sendLedMode(LedModeSerializable &led_mode_serializable) {
-    Communications_protocol::Packet packet{};
-    packet.header.command = Communications_protocol::MODE_LED;
-    packet.header.size    = led_mode_serializable.serialize(packet.data);
-    Communications.sendPacket(packet);
+  static void sendLedMode(LedModeSerializable &led_mode_serializable)
+  {
+      // If the host is not connected, we should not update the mode and show the user layers.
+      // This block is responsible for sending the LED mode to the host and preventing
+      // that if you have both sides connected to neuron,
+      // and you disconnect and reconnect the side, the keyboard will not show the layers.
+      if(!Communications.is_host_connected() && layer_mode_set())
+      {
+          return;
+      }
+
+      Communications_protocol::Packet packet{};
+      packet.header.command = Communications_protocol::MODE_LED;
+      packet.header.size    = led_mode_serializable.serialize(packet.data);
+      Communications.sendPacket(packet);
   }
 };
 #endif  //_LEDMODECOMMUNICATION_H_
