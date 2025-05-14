@@ -99,7 +99,7 @@ public:
 
     // Calcular el paso entre LEDs basado en la cantidad de LEDs y el multiplicador
     uint8_t hueStep = 255 / NUMBER_OF_LEDS;
-    uint8_t hueOffset = (gpio_get(25)) ? hueStep : 0;
+    uint8_t hueOffset = (KsConfig::get_side()) ? hueStep : 0;
 
     // Iterar sobre cada LED y establecer su color correspondiente
     // Calcular el valor de matiz (hue) para el LED actual con un desplazamiento
@@ -194,7 +194,7 @@ public:
   void updateLEDs()
   {
     // Obtiene el tiempo actualk,nkm,l.hjñ{oiy
-    uint32_t currentTime = to_ms_since_boot(get_absolute_time());
+    uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
     // k Itera sobre cada LED
     for (uint8_t i = 0; i < NUM_LEDS; i++)
@@ -232,14 +232,14 @@ public:
     turnOnLED(keyIndex);
 
     // Guarda el tiempo en que se presionó la tecla
-    keypress_leds[keyIndex] = to_ms_since_boot(get_absolute_time());
+    keypress_leds[keyIndex] = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
     // Establece la bandera de tecla presionada en verdadero
   }
 
   void update() override
   {
-    uint32_t currentTime = to_ms_since_boot(get_absolute_time());
+    uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     static uint32_t last_time = currentTime;
 
     uint8_t data[Pins::ROWS]{};

@@ -65,7 +65,7 @@ public:
         RGBW color = {0,0,0,255};
         if (pos <= Pins::BL_LEDS_RIGHT)
         {
-            uint32_t currentMillis = to_ms_since_boot(get_absolute_time());
+            uint32_t currentMillis = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
             if (currentMillis - previousMillis >= TIME_INTERVAL)
             {
