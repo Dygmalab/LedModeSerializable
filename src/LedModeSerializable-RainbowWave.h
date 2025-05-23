@@ -60,26 +60,26 @@ public:
         uint8_t baseHue = rainbowHue % 255;
 
         // Calculate the step between rows based on the number of rows
-        uint8_t hueStep = 255 / Pins::NUM_ROWS;
+        uint8_t hueStep = 255 / KsConfig::NUM_ROWS;
 
         // Precompute the hue values for each row
-        uint8_t rowHues[Pins::NUM_ROWS];
-        for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
+        uint8_t rowHues[KsConfig::NUM_ROWS];
+        for (uint8_t row = 0; row < KsConfig::NUM_ROWS; ++row)
         {
             rowHues[row] = (baseHue + row * hueStep) % 255;
         }
 
         if (KsConfig::get_side() == KsConfig::Side::RIGHT)
         {
-            p_rainbow_col = &Pins::NUM_COLS_RIGHT[0];
+            p_rainbow_col = &KsConfig::NUM_COLS_RIGHT[0];
         }
         else
         {
-            p_rainbow_col = &Pins::NUM_COLS_LEFT[0];
+            p_rainbow_col = &KsConfig::NUM_COLS_LEFT[0];
         }
 
         // Iterate over each row
-        for (uint8_t row = 0; row < Pins::NUM_ROWS; ++row)
+        for (uint8_t row = 0; row < KsConfig::NUM_ROWS; ++row)
         {
             RGBW rainbow = calculateRGBWFromHue(rowHues[row]);
             for (uint8_t i = 0; i < p_rainbow_col[row]; ++i)
@@ -102,7 +102,7 @@ public:
 private:
     uint16_t rainbowHue = 0;
 #ifdef KEYSCANNER
-    uint8_t rowHues[Pins::NUM_ROWS];
+    uint8_t rowHues[KsConfig::NUM_ROWS];
 
     const uint8_t *p_rainbow_col;
 
@@ -127,9 +127,9 @@ private:
         uint8_t baseHue = rainbowHue % 255;
         const uint8_t NUM_LEDS = 53;
 
-        for (uint8_t i = 0; i < Pins::MAX_UG_LEDS; ++i)
+        for (uint8_t i = 0; i < KsConfig::MAX_UG_LEDS; ++i)
         {
-            uint8_t hue = (baseHue + ((i - Pins::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
+            uint8_t hue = (baseHue + ((i - KsConfig::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
             RGBW color = calculateRGBWFromHue(hue);
             LEDManagement::set_ug_at(color, i);
         }

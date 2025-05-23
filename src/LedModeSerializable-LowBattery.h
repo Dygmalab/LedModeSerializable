@@ -93,16 +93,16 @@ public:
     if(KsConfig::get_side() == KsConfig::Side::RIGHT)
     {
      //Right side
-        LEDManagement::set_led_at(first_cell, Pins::FIRST_CELL_POS_RIGHT);
-        LEDManagement::set_led_at(second_cell, Pins::SECOND_CELL_POS_RIGHT);
-        LEDManagement::set_led_at(third_cell, Pins::THIRD_CELL_POS_RIGHT);
+        LEDManagement::set_led_at(first_cell, KsConfig::FIRST_CELL_POS_RIGHT);
+        LEDManagement::set_led_at(second_cell, KsConfig::SECOND_CELL_POS_RIGHT);
+        LEDManagement::set_led_at(third_cell, KsConfig::THIRD_CELL_POS_RIGHT);
     }
     else
     {
      //Lefts side
-        LEDManagement::set_led_at(first_cell, Pins::FIRST_CELL_POS_LEFT);
-        LEDManagement::set_led_at(second_cell, Pins::SECOND_CELL_POS_LEFT);
-        LEDManagement::set_led_at(third_cell, Pins::THIRD_CELL_POS_LEFT);
+        LEDManagement::set_led_at(first_cell, KsConfig::FIRST_CELL_POS_LEFT);
+        LEDManagement::set_led_at(second_cell, KsConfig::SECOND_CELL_POS_LEFT);
+        LEDManagement::set_led_at(third_cell, KsConfig::THIRD_CELL_POS_LEFT);
     }
 
     LEDManagement::set_updated(true);
