@@ -113,7 +113,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(4 - advertising_id);
-        setUnderglowLEDS(Pins::UG_LEDS_RIGHT);
+        setUnderglowLEDS(KsConfig::UG_LEDS_RIGHT);
       }
     }
     else
@@ -140,7 +140,7 @@ public:
       if (advertising_id != NOT_ON_ADVERTISING)
       {
         breathe(advertising_id);
-        setUnderglowLEDS(Pins::UG_LEDS_LEFT);
+        setUnderglowLEDS(KsConfig::UG_LEDS_LEFT);
       }
     }
     if (erease_done)

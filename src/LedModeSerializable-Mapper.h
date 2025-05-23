@@ -63,7 +63,7 @@ public:
         static unsigned long previousMillis = 0;
 
         RGBW color = {0,0,0,255};
-        if (pos <= Pins::BL_LEDS_RIGHT)
+        if (pos <= KsConfig::BL_LEDS_RIGHT)
         {
             uint32_t currentMillis = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
 
@@ -108,7 +108,7 @@ public:
     inline  static uint8_t key_pressed{false};
 
     uint8_t counter = 0;
-    uint8_t positions[Pins::MAX_BL_LEDS] = {0};
+    uint8_t positions[KsConfig::MAX_BL_LEDS] = {0};
 
 private:
 };

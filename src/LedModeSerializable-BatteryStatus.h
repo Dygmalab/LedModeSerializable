@@ -128,11 +128,11 @@ public:
       {
           if(KsConfig::get_side() == KsConfig::Side::RIGHT)
           {
-              breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_RIGHT);
+              breathe_at(thirdCellPosition,KsConfig::THIRD_CELL_POS_RIGHT);
           }
           else
           {
-            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_LEFT);
+            breathe_at(thirdCellPosition,KsConfig::THIRD_CELL_POS_LEFT);
           }
       }
     }
@@ -145,16 +145,16 @@ public:
 /*        if(KsConfig::get_side() == KsConfig::Side::RIGHT)
         {
             //Right side
-            breathe_at(thirdCellPosition,Pins::FIRST_CELL_POS_RIGHT);
-            breathe_at(secondCellPosition,Pins::SECOND_CELL_POS_RIGHT);
-            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_RIGHT);
+            breathe_at(thirdCellPosition,KsConfig::FIRST_CELL_POS_RIGHT);
+            breathe_at(secondCellPosition,KsConfig::SECOND_CELL_POS_RIGHT);
+            breathe_at(thirdCellPosition,KsConfig::THIRD_CELL_POS_RIGHT);
         }
         else
         {
             //Left side
-            breathe_at(thirdCellPosition,Pins::FIRST_CELL_POS_LEFT);
-            breathe_at(secondCellPosition,Pins::SECOND_CELL_POS_LEFT);
-            breathe_at(thirdCellPosition,Pins::THIRD_CELL_POS_LEFT);
+            breathe_at(thirdCellPosition,KsConfig::FIRST_CELL_POS_LEFT);
+            breathe_at(secondCellPosition,KsConfig::SECOND_CELL_POS_LEFT);
+            breathe_at(thirdCellPosition,KsConfig::THIRD_CELL_POS_LEFT);
         }*/
     }
     break;
@@ -188,16 +188,16 @@ private:
       if(KsConfig::get_side() == KsConfig::Side::RIGHT)
       {
           //Right side
-          LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_RIGHT);
-          LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_RIGHT);
-          LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_RIGHT);
+          LEDManagement::set_led_at(firstCell, KsConfig::FIRST_CELL_POS_RIGHT);
+          LEDManagement::set_led_at(secondCell, KsConfig::SECOND_CELL_POS_RIGHT);
+          LEDManagement::set_led_at(thirdCell, KsConfig::THIRD_CELL_POS_RIGHT);
       }
       else
       {
           //Lefts side
-          LEDManagement::set_led_at(firstCell, Pins::FIRST_CELL_POS_LEFT);
-          LEDManagement::set_led_at(secondCell, Pins::SECOND_CELL_POS_LEFT);
-          LEDManagement::set_led_at(thirdCell, Pins::THIRD_CELL_POS_LEFT);
+          LEDManagement::set_led_at(firstCell, KsConfig::FIRST_CELL_POS_LEFT);
+          LEDManagement::set_led_at(secondCell, KsConfig::SECOND_CELL_POS_LEFT);
+          LEDManagement::set_led_at(thirdCell, KsConfig::THIRD_CELL_POS_LEFT);
       }
     LEDManagement::set_updated(true, true);
   }
