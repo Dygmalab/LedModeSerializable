@@ -150,14 +150,17 @@ public:
         DBG_PRINTF_TRACE("LAYER == 0**************************");
         flag = true;
         max_reached = false;
-        reached_ug_brightness = reached_bl_brightness = false;
+        reached_ug_brightness = false;
+        reached_bl_brightness = false;
         base_settings.delay_ms = 0;
         LEDManagement::onDismount(LEDManagement::LedBrightnessControlEffect::FADE_EFFECT);
+        //LEDManagement::onMount(LEDManagement::LedBrightnessControlEffect::NONE,LEDManagement::get_max_ledDriver_brightness(), LEDManagement::get_underglow_brightness());
       }
     }
     else
     {
       base_settings.delay_ms = 0;
+        printf("RELEASING KEY LAYER \n");
     }
   }
 
