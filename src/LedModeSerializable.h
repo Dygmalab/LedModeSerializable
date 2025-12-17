@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <string>
+#include <cstring>
 #include <cstdint>
 #include <type_traits>
 #include "assert.h"
