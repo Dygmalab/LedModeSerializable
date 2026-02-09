@@ -35,6 +35,10 @@
 #include "BatteryManagement.hpp"
 #endif
 
+#define BT_CHANNEL_COUNT    5
+#define BT_NUM_COLS_LEFT    KsConfig::NUM_COLS_LEFT[0]
+#define BT_NUM_COLS_RIGHT   KsConfig::NUM_COLS_RIGHT[0]
+
 class LedModeSerializable_BluetoothPairing : public LedModeSerializable
 {
 public:
@@ -74,72 +78,85 @@ public:
 #ifdef KEYSCANNER
   void update() override
   {
-    for (int i = 4; i >= 0; i--)
+    uint16_t led_pos;
+
+    for (int i = 0; i < BT_CHANNEL_COUNT; i++)
     {                                         // Iterate through each bit
-      bool bit = (paired_channels_ >> i) & 1; // Read the bit at position i using shift and AND
+      bool bit = (paired_channels_ >> i) & 0x01; // Read the bit at position i using shift and AND
 
       if (bit)
       {
-        key_color[i + 1] = white;
-        is_paired[i + 1] = 1;
+        key_color[i] = white;
+        is_paired[i] = 1;
       }
       else
       {
-        key_color[i + 1] = blue;
-        is_paired[i + 1] = 0;
+        key_color[i] = blue;
+        is_paired[i] = 0;
       }
     }
     if (KsConfig::get_side())
     { // Right side
-      LEDManagement::set_led_at(yellow, 6);
-      for (int i = 5; i >= 1; --i)
+      LEDManagement::set_led_at(yellow, BT_NUM_COLS_RIGHT - 1);
+      for (int i = 0; i < BT_CHANNEL_COUNT; i++)
       {
+        led_pos = BT_NUM_COLS_RIGHT - i - 2;
 
-        LEDManagement::set_led_at(key_color[6 - i], i);
-        if (is_paired[6 - i] == 1)
+        LEDManagement::set_led_at(key_color[i], led_pos);
+        if (is_paired[i] == 1)
         {
-          LEDManagement::set_led_at(red, i + 7);
+          LEDManagement::set_led_at(red, led_pos + BT_NUM_COLS_RIGHT);
         }
         else
         {
-          LEDManagement::set_led_at(ledOff, i + 7);
+          LEDManagement::set_led_at(ledOff, led_pos + BT_NUM_COLS_RIGHT);
         }
       }
       if (connected_channel_id_ != NOT_CONNECTED && connected_channel_id_ < 5)
       {
-        LEDManagement::set_led_at(green, 4 - connected_channel_id_ + 1);
-        LEDManagement::set_led_at(red, 4 - connected_channel_id_ + 8);
+        led_pos = BT_NUM_COLS_RIGHT - connected_channel_id_ - 2;
+
+        LEDManagement::set_led_at(green, led_pos);
+        LEDManagement::set_led_at(red, led_pos + BT_NUM_COLS_RIGHT);
       }
       if (advertising_id != NOT_ON_ADVERTISING)
       {
-        breathe(4 - advertising_id);
+        led_pos = BT_NUM_COLS_RIGHT - advertising_id - 2;
+
+        breathe(led_pos);
         setUnderglowLEDS(KsConfig::UG_LEDS_RIGHT);
       }
     }
     else
     { // Left side
-      for (uint8_t i = 1; i < 6; ++i)
+      LEDManagement::set_led_at(yellow, 0);
+      for (uint8_t i = 0; i < BT_CHANNEL_COUNT; ++i)
       {
-        LEDManagement::set_led_at(yellow, 0);
-        LEDManagement::set_led_at(key_color[i], i);
+        led_pos = i + 1;
+
+        LEDManagement::set_led_at(key_color[i], led_pos);
         if (is_paired[i] == 1)
         {
-          LEDManagement::set_led_at(red, i + 7);
+          LEDManagement::set_led_at(red, led_pos + BT_NUM_COLS_LEFT);
         }
         else
         {
-          LEDManagement::set_led_at(ledOff, i + 7);
+          LEDManagement::set_led_at(ledOff, led_pos + BT_NUM_COLS_LEFT);
         }
       }
 
       if (connected_channel_id_ != NOT_CONNECTED && connected_channel_id_ < 5)
       {
-        LEDManagement::set_led_at(green, connected_channel_id_ + 1);
-        LEDManagement::set_led_at(red, connected_channel_id_ + 8);
+        led_pos = connected_channel_id_ + 1;
+
+        LEDManagement::set_led_at(green, led_pos);
+        LEDManagement::set_led_at(red, led_pos + BT_NUM_COLS_LEFT);
       }
       if (advertising_id != NOT_ON_ADVERTISING)
       {
-        breathe(advertising_id);
+        led_pos = advertising_id + 1;
+
+        breathe(led_pos);
         setUnderglowLEDS(KsConfig::UG_LEDS_LEFT);
       }
     }
@@ -214,7 +231,7 @@ public:
       }
     }
 
-  void breathe(uint8_t channel_id)
+  void breathe(uint8_t led_pos)
   {
     uint8_t i = ((uint16_t)hal_mcu_systim_ms_get(hal_mcu_systim_counter_get())) >> 3;
 
@@ -232,7 +249,7 @@ public:
     RGBW breathe = LEDManagement::HSVtoRGB(160, 255, i);
     breathe.w = 0;
 
-    LEDManagement::set_led_at(breathe, channel_id + 1);
+    LEDManagement::set_led_at(breathe, led_pos);
   }
 #endif
 
@@ -254,11 +271,11 @@ private:
   static constexpr RGBW ledOff = {0, 0, 0, 0};
   enum Channels : uint8_t
   {
-    NOT_CONNECTED = 5,
+    NOT_CONNECTED = BT_CHANNEL_COUNT,
     NOT_ON_ADVERTISING
   };
-  std::vector<RGBW> key_color{5};
-  std::vector<uint8_t> is_paired{5};
+  std::vector<RGBW> key_color{BT_CHANNEL_COUNT};
+  std::vector<uint8_t> is_paired{BT_CHANNEL_COUNT};
   uint8_t underglow_led_id = 0;
 #endif
 };
