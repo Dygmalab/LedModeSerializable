@@ -30,6 +30,7 @@
 #ifdef KEYSCANNER
 #include "LEDManagement.hpp"
 #include "BatteryManagement.hpp"
+#include "BatteryInterface.h"
 #endif
 
 class LedModeSerializable_BatteryStatus : public LedModeSerializable
@@ -62,20 +63,20 @@ public:
   void update() override
   {
     const uint8_t batteryLevel = BatteryManagement::getBatteryPercentage();
-    const BatteryManagement::BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
+    const BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
 
     uint32_t current_time = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     static uint32_t last_execution_time = 0;
 
     switch (batteryStatus)
     {
-    case BatteryManagement::CHARGING_DONE:
+    case BatteryStatus::CHARGING_DONE:
     {
       setLedState(green, green, green);
     }
     break;
 
-    case BatteryManagement::CHARGING:
+    case BatteryStatus::CHARGING:
     {
         static enum {
             FIRST_CELL,
@@ -110,7 +111,7 @@ public:
     }
     break;
 
-    case BatteryManagement::NOT_CHARGHING:
+    case BatteryStatus::NOT_CHARGHING:
     {
       if (batteryLevel > 70)
       {
