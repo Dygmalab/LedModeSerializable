@@ -28,7 +28,7 @@
 #include "cstdio"
 
 #ifdef KEYSCANNER
-#include "config_ks_app.h"
+#include "keyscanner_config/config_ks_app.h"
 #include "debug_print.h"
 #define FADE_DURATION 9000
 #include <LEDManagement.hpp>
