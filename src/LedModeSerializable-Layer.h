@@ -84,7 +84,13 @@ public:
 
     for (uint8_t i = 0; i < KsConfig::MAX_BL_LEDS; i++)
     {
-      RGBW &color = LEDManagement::palette[actualLayer.keyMap_leds[i]];
+      uint8_t palette_idx = actualLayer.keyMap_leds[i];
+      RGBW &color = LEDManagement::palette[palette_idx];
+      if(i == 0)
+      {
+          DBG_PRINTF_TRACE("Layer effect: LED[0] palette_idx=%d, color r=%d g=%d b=%d", 
+                palette_idx, color.r, color.g, color.b);
+      }
       LEDManagement::set_led_at(color, i);
     }
 

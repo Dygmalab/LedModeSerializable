@@ -28,6 +28,7 @@
 #include "cstdio"
 
 #ifdef KEYSCANNER
+#include "keyscanner_config/config_ks_app.h"
 #include "debug_print.h"
 #define FADE_DURATION 9000
 #include <LEDManagement.hpp>
@@ -242,18 +243,30 @@ public:
     uint32_t currentTime = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());
     static uint32_t last_time = currentTime;
 
-    uint8_t data[Pins::ROWS]{};
+    uint8_t data[Pins::ROWS * 2]{};
     KeyScanner.get_key_matrix(data);
     for (int i = 0; i < Pins::ROWS; ++i)
     {
-      uint8_t rows = data[i];
+      uint16_t rows = (uint16_t)data[i * 2] | ((uint16_t)data[i * 2 + 1] << 8);
       for (int j = 0; j < Pins::COLS; ++j)
       {
         if (rows >> j & 1)
         {
           map[i][j] = 0xFF;
           uint8_t led_position;
-#ifdef RAISE2
+#ifdef SONSHI
+          uint8_t led_mapping_index = KsConfig::STALKER_POS_LEFT[i][j];
+          if (led_mapping_index != 255)
+          {
+            led_position = led_mapping_index;
+            DBG_PRINTF_TRACE("pos: row=%i col=%i -> mapping_idx=%i -> LED=%i\n", i, j, led_mapping_index, led_position);
+          }
+          else
+          {
+            led_position = 255;
+          }
+          
+#elif defined(RAISE2)
           if (KsConfig::get_side() == KsConfig::Side::RIGHT)
           {
             led_position = pos_right[i][j];
@@ -262,7 +275,7 @@ public:
           else
           {
             led_position = pos_left[i][j];
-              DBG_PRINTF_TRACE("pos: %i, %i\n", i, j);
+            DBG_PRINTF_TRACE("pos: %i, %i\n", i, j);
           }
 #else
           led_position = i * (Pins::ROWS + 2) + j;
@@ -271,6 +284,7 @@ public:
             led_position--;
           }
 #endif
+
             if (led_position != 255)
             {
                 handleKeyPress(led_position);
@@ -299,23 +313,22 @@ public:
   uint8_t w_;
 
 private:
-#ifdef KEYSCANNER
-
+#if defined(KEYSCANNER) && defined(RAISE2)
   uint8_t pos_left[Pins::ROWS][Pins::COLS] = {
       {0, 1, 2, 3, 4, 5, 6 , 255},
       {7, 8, 9, 10, 11, 12, 255, 255},
       {13, 14, 15, 16, 17, 18, 255, 255},
       {19, 20, 21, 22, 23, 24, 25, 255},
       {26, 27, 28, 29, 30, 31, 32,255},
-  };
+  };  
 
-    uint8_t pos_right[Pins::ROWS][Pins::COLS] = {
-            {0, 1, 2, 3, 4, 5, 6, 255},
-            {7, 8, 9, 10, 11, 12, 13, 14},
-            {15, 16, 17, 18, 19, 20, 21, 255},
-            {22, 23, 24, 25, 26, 27, 255, 255},
-            {28, 29, 30, 31, 32, 33, 34,35}
-    };
+  uint8_t pos_right[Pins::ROWS][Pins::COLS] = {
+      {0, 1, 2, 3, 4, 5, 6, 255},
+      {7, 8, 9, 10, 11, 12, 13, 14},
+      {15, 16, 17, 18, 19, 20, 21, 255},
+      {22, 23, 24, 25, 26, 27, 255, 255},
+      {28, 29, 30, 31, 32, 33, 34,35}
+  };
 #endif
 };
 
