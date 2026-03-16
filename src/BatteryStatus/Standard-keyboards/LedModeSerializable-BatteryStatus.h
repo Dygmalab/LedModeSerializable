@@ -63,7 +63,6 @@ public:
   void update() override
   {
     uint8_t batteryLevel = BatteryManagement::getBatteryPercentage();
-    batteryLevel = 50;
    
     DBG_PRINTF_TRACE("Battery level: %d\n", batteryLevel);
     const BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
