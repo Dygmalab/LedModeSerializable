@@ -63,8 +63,7 @@ public:
   void update() override
   {
     uint8_t batteryLevel = BatteryManagement::getBatteryPercentage();
-   
-    DBG_PRINTF_TRACE("Battery level: %d\n", batteryLevel);
+    
     const BatteryStatus batteryStatus = BatteryManagement::getBatteryStatus();
 
     switch (batteryStatus)
@@ -156,7 +155,7 @@ public:
         else
         {
           // Battery hasn't reached this range yet: red
-          LEDManagement::set_led_at(red, KsConfig::STALKER_POS_LEFT[0][i]);
+          LEDManagement::set_led_at(gray, KsConfig::STALKER_POS_LEFT[0][i]);
         }
       }
       
@@ -186,10 +185,10 @@ private:
 
   static constexpr RGBW green = {0, 255, 0, 0};
   static constexpr RGBW yellow = {255, 255, 0, 0};
-  static constexpr RGBW red = {255, 0, 0, 0};
+  static constexpr RGBW gray = {0, 0, 0, 255};
   static constexpr RGBW ledOff = {0, 0, 0, 0};
   
-  static constexpr uint16_t charging_animation_delay = 100; // ms between animation steps
+  static constexpr uint16_t charging_animation_delay = 120; // ms between animation steps
 
 #endif
 };
