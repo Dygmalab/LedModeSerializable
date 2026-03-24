@@ -231,7 +231,7 @@ private:
 
       RGBW breathe = LEDManagement::HSVtoRGB(0, 255 , i);
       breathe.w = 0;
-      printf("Breathe: %d %d %d %d\n", breathe.r, breathe.g, breathe.b, breathe.w);
+
       LEDManagement::set_led_at(breathe, cellPosition);
       LEDManagement::set_updated(true);
   }

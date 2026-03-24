@@ -108,6 +108,11 @@ public:
     LEDManagement::set_updated(true);
   }
 
+  void reset()
+  {
+    currentCell = CurrentCell::NO_CELL;
+  }
+
   void resetCounter()
   {
     counter = 9;
