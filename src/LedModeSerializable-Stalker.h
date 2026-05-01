@@ -254,7 +254,7 @@ public:
         {
           map[i][j] = 0xFF;
           uint8_t led_position;
-#ifdef SONSHI
+#ifdef SONSEI
           uint8_t led_mapping_index = KsConfig::STALKER_POS_LEFT[i][j];
           if (led_mapping_index != 255)
           {
