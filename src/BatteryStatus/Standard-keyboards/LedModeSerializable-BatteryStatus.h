@@ -1,4 +1,4 @@
-/* LedModeSerializable_BatteryStatus - LED battery status for Sonshi keyboard.
+/* LedModeSerializable_BatteryStatus - LED battery status for Sonsei keyboard.
  * Copyright (C) 2023, 2024  DygmaLabs, S. L.
  *
  * The MIT License (MIT)
@@ -177,7 +177,7 @@ public:
   }
 
 private:
-  // LED positions for number keys 1-0 on Sonshi keyboard
+  // LED positions for number keys 1-0 on Sonsei keyboard
   // Based on led_mapping array from config_ks_app.h:
   // Row 0: 0, 6, 12, 18, 24, 5, 35, 54, 48, 42, 36, 30
   // Number keys 1-0 correspond to physical LEDs at these positions
