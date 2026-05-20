@@ -139,8 +139,6 @@ public:
     all_color_mode_ = Color::OFF;
   }
 
-#ifdef KEYSCANNER
-
   void update() override
   {
     LEDManagement::set_all_leds({0, 0, 0, 0}, false);
@@ -210,8 +208,6 @@ public:
 
     LEDManagement::set_updated(true);
   }
-
-#endif
 
 private:
 
