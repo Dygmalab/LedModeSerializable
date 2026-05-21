@@ -61,6 +61,7 @@ public:
     }
     output[index++] = blink_counter_;
     output[index++] = static_cast<uint8_t>(all_color_mode_);
+    output[index++] = static_cast<uint8_t>(force_solid_color_);
     return index;
   }
 
@@ -73,6 +74,7 @@ public:
     }
     blink_counter_ = input[index++];
     all_color_mode_ = static_cast<Color>(input[index++]);
+    force_solid_color_ = static_cast<bool>(input[index++]);
     base_settings.delay_ms = 50;
     return index;
   }
@@ -86,6 +88,14 @@ public:
         test_states_[i] = TestState::SUCCESS;
         break;
       }
+    }
+  }
+
+  void set_success_at(uint8_t test_index)
+  {
+    if (test_index < MAX_TEST)
+    {
+      test_states_[test_index] = TestState::SUCCESS;
     }
   }
 
@@ -108,26 +118,31 @@ public:
   void set_all_red()
   {
     all_color_mode_ = Color::RED;
+    force_solid_color_ = true;
   }
 
   void set_all_green()
   {
     all_color_mode_ = Color::GREEN;
+    force_solid_color_ = true;
   }
 
   void set_all_blue()
   {
     all_color_mode_ = Color::BLUE;
+    force_solid_color_ = true;
   }
 
   void set_all_white()
   {
     all_color_mode_ = Color::WHITE;
+    force_solid_color_ = true;
   }
 
   void set_all_off()
   {
     all_color_mode_ = Color::OFF;
+    force_solid_color_ = false;
     for (uint8_t i = 0; i < MAX_TEST; i++)
     {
       test_states_[i] = TestState::OFF;
@@ -139,11 +154,16 @@ public:
     all_color_mode_ = Color::OFF;
   }
 
+  void clear_force_solid_color()
+  {
+    force_solid_color_ = false;
+  }
+
   void update() override
   {
     LEDManagement::set_all_leds({0, 0, 0, 0}, false);
 
-    if (all_color_mode_ != Color::OFF)
+    if (force_solid_color_)
     {
       RGBW color = {0, 0, 0, 0};
       switch (all_color_mode_)
@@ -160,9 +180,12 @@ public:
         case Color::WHITE:
           color = {0, 0, 0, 255};
           break;
+        default:
+          break;
       }
       LEDManagement::set_all_leds(color);
       LEDManagement::set_updated(true);
+
       return;
     }
 
@@ -226,6 +249,7 @@ private:
   TestState test_states_[MAX_TEST];
   uint8_t blink_counter_ = 0;
   Color all_color_mode_ = Color::OFF;
+  bool force_solid_color_ = false;
 };
 
 static LedModeSerializable_ProdLedTest
