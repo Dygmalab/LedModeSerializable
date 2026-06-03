@@ -183,10 +183,17 @@ private:
   // Number keys 1-0 correspond to physical LEDs at these positions
 
 
-  static constexpr RGBW green = {0, 255, 0, 0};
-  static constexpr RGBW yellow = {255, 255, 0, 0};
-  static constexpr RGBW gray = {0, 0, 0, 255};
-  static constexpr RGBW ledOff = {0, 0, 0, 0};
+#ifdef RGBW_LED
+  static constexpr KsConfig::color_t green = {0, 255, 0, 0};
+  static constexpr KsConfig::color_t yellow = {255, 255, 0, 0};
+  static constexpr KsConfig::color_t gray = {0, 0, 0, 255};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0, 0};
+#else
+  static constexpr KsConfig::color_t green = {0, 255, 0};
+  static constexpr KsConfig::color_t yellow = {255, 255, 0};
+  static constexpr KsConfig::color_t gray = {128, 128, 128};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0};
+#endif
   
   static constexpr uint16_t charging_animation_delay = 120; // ms between animation steps
 

@@ -246,8 +246,7 @@ public:
 
     i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
-    RGBW breathe = LEDManagement::HSVtoRGB(160, 255, i);
-    breathe.w = 0;
+    KsConfig::color_t breathe = LEDManagement::HSVtoRGB(160, 255, i);
 
     LEDManagement::set_led_at(breathe, led_pos);
   }
@@ -263,18 +262,27 @@ public:
 
 private:
 #ifdef KEYSCANNER
-  static constexpr RGBW white = {0, 0, 0, 255};
-  static constexpr RGBW green = {0, 255, 0, 0};
-  static constexpr RGBW blue = {0, 0, 255, 0};
-  static constexpr RGBW red = {255, 0, 0, 0};
-  static constexpr RGBW yellow = {150, 150, 0, 0};
-  static constexpr RGBW ledOff = {0, 0, 0, 0};
+#ifdef RGBW_LED
+  static constexpr KsConfig::color_t white = {0, 0, 0, 255};
+  static constexpr KsConfig::color_t green = {0, 255, 0, 0};
+  static constexpr KsConfig::color_t blue = {0, 0, 255, 0};
+  static constexpr KsConfig::color_t red = {255, 0, 0, 0};
+  static constexpr KsConfig::color_t yellow = {150, 150, 0, 0};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0, 0};
+#else
+  static constexpr KsConfig::color_t white = {255, 255, 255};
+  static constexpr KsConfig::color_t green = {0, 255, 0};
+  static constexpr KsConfig::color_t blue = {0, 0, 255};
+  static constexpr KsConfig::color_t red = {255, 0, 0};
+  static constexpr KsConfig::color_t yellow = {150, 150, 0};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0};
+#endif
   enum Channels : uint8_t
   {
     NOT_CONNECTED = BT_CHANNEL_COUNT,
     NOT_ON_ADVERTISING
   };
-  std::vector<RGBW> key_color{BT_CHANNEL_COUNT};
+  std::vector<KsConfig::color_t> key_color{BT_CHANNEL_COUNT};
   std::vector<uint8_t> is_paired{BT_CHANNEL_COUNT};
   uint8_t underglow_led_id = 0;
 #endif
