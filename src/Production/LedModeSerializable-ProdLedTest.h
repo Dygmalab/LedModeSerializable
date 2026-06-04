@@ -161,24 +161,24 @@ public:
 
   void update() override
   {
-    LEDManagement::set_all_leds({0, 0, 0, 0}, false);
+    LEDManagement::set_all_leds({0, 0, 0}, false);
 
     if (force_solid_color_)
     {
-      RGBW color = {0, 0, 0, 0};
+      KsConfig::color_t color = {0, 0, 0};
       switch (all_color_mode_)
       {
         case Color::RED:
-          color = {255, 0, 0, 0};
+          color = {255, 0, 0};
           break;
         case Color::GREEN:
-          color = {0, 255, 0, 0};
+          color = {0, 255, 0};
           break;
         case Color::BLUE:
-          color = {0, 0, 255, 0};
+          color = {0, 0, 255};
           break;
         case Color::WHITE:
-          color = {0, 0, 0, 255};
+          color = {255, 255, 255};
           break;
         default:
           break;
@@ -191,32 +191,32 @@ public:
 
     for (uint8_t i = 0; i < MAX_TEST; i++)
     {
-      RGBW color = {0, 0, 0, 0};
+      KsConfig::color_t color = {0, 0, 0};
 
       switch (test_states_[i])
       {
         case TestState::SUCCESS:
-          color = {0, 255, 0, 0};
+          color = {0, 255, 0};
           break;
 
         case TestState::WAIT:
           if ((blink_counter_ / 10) % 2 == 0)
           {
-            color = {255, 150, 0, 0};
+            color = {255, 150, 0};
           }
           else
           {
-            color = {0, 0, 0, 0};
+            color = {0, 0, 0};
           }
           break;
 
         case TestState::FAIL:
-          color = {255, 0, 0, 0};
+          color = {255, 0, 0};
           break;
 
         case TestState::OFF:
         default:
-          color = {0, 0, 0, 0};
+          color = {0, 0, 0};
           break;
       }
 
