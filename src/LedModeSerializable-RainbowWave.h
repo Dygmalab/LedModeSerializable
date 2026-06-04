@@ -81,7 +81,7 @@ public:
         // Iterate over each row
         for (uint8_t row = 0; row < KsConfig::NUM_ROWS; ++row)
         {
-            RGBW rainbow = calculateRGBWFromHue(rowHues[row]);
+            KsConfig::color_t rainbow = calculateRGBWFromHue(rowHues[row]);
             for (uint8_t i = 0; i < p_rainbow_col[row]; ++i)
             {
 
@@ -106,12 +106,12 @@ private:
 
     const uint8_t *p_rainbow_col;
 
-    static RGBW calculateRGBWFromHue(uint8_t hue)
+    static KsConfig::color_t calculateRGBWFromHue(uint8_t hue)
     {
         return LEDManagement::hueTable[hue];
     }
 
-    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], RGBW color) const
+    void setLEDColor(uint8_t row, uint8_t col, const uint8_t NUM_COLS[], KsConfig::color_t color) const
     {
         // Calculate the LED index in the LED array
         uint8_t ledIndex = col;
@@ -130,7 +130,7 @@ private:
         for (uint8_t i = 0; i < KsConfig::MAX_UG_LEDS; ++i)
         {
             uint8_t hue = (baseHue + ((i - KsConfig::MAX_BL_LEDS) * 256 / NUM_LEDS)) % 255;
-            RGBW color = calculateRGBWFromHue(hue);
+            KsConfig::color_t color = calculateRGBWFromHue(hue);
             LEDManagement::set_ug_at(color, i);
         }
     }

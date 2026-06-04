@@ -46,8 +46,7 @@ public:
 
         rainbowHue = (rainbowHue + 1) % 255;
 
-        RGBW rainbow = calculateRGBWFromHue(rainbowHue);
-        rainbow.w = 0;
+        KsConfig::color_t rainbow = calculateRGBWFromHue(rainbowHue);
 
         LEDManagement::set_all_leds(rainbow);
         LEDManagement::set_updated(true);
@@ -56,7 +55,7 @@ public:
 
 private:
 #ifdef KEYSCANNER
-    static RGBW calculateRGBWFromHue(uint8_t hue)
+    static KsConfig::color_t calculateRGBWFromHue(uint8_t hue)
     {
         return LEDManagement::hueTable[hue];
     }

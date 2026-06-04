@@ -62,7 +62,11 @@ public:
     {
         static unsigned long previousMillis = 0;
 
-        RGBW color = {0,0,0,255};
+#ifdef RGBW_LED
+        KsConfig::color_t color = {0,0,0,255};
+#else
+        KsConfig::color_t color = {255,255,255};
+#endif
         if (pos <= KsConfig::BL_LEDS_RIGHT)
         {
             uint32_t currentMillis = hal_mcu_systim_ms_get(hal_mcu_systim_counter_get());

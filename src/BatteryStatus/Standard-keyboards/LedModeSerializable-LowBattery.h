@@ -230,17 +230,18 @@ private:
 
   static uint8_t animationStep;
 
-  static constexpr RGBW red = {255, 0, 0, 0};
-
-  static constexpr RGBW yellow = {255, 255, 0, 0};
-
-  static constexpr RGBW ledOff = {0, 0, 0, 0};
-
+#ifdef RGBW_LED
+  static constexpr KsConfig::color_t red = {255, 0, 0, 0};
+  static constexpr KsConfig::color_t yellow = {255, 255, 0, 0};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0, 0};
+#else
+  static constexpr KsConfig::color_t red = {255, 0, 0};
+  static constexpr KsConfig::color_t yellow = {255, 255, 0};
+  static constexpr KsConfig::color_t ledOff = {0, 0, 0};
+#endif
   
-
   // Configurable background color - change this to ledOff for black background
-
-  static constexpr RGBW background_color = ledOff;
+  static constexpr KsConfig::color_t background_color = ledOff;
 
   
 
