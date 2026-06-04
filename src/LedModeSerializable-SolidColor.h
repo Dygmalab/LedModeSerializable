@@ -62,7 +62,19 @@ public:
 
   void update() override
   {
+#ifdef RGBW_LED
     LEDManagement::set_all_leds({r_, g_, b_, w_});
+#else
+    // Mix white channel into RGB for proper white color representation on RGB LEDs
+    uint16_t temp_r = r_ + w_;
+    uint16_t temp_g = g_ + w_;
+    uint16_t temp_b = b_ + w_;
+    LEDManagement::set_all_leds({
+      (uint8_t)((temp_r > 255) ? 255 : temp_r),
+      (uint8_t)((temp_g > 255) ? 255 : temp_g),
+      (uint8_t)((temp_b > 255) ? 255 : temp_b)
+    });
+#endif
     LEDManagement::set_updated(true);
   }
 

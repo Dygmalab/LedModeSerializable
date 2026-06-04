@@ -93,7 +93,7 @@ public:
     }
   }
 
-  RGBW calculateRainbowColor(uint8_t index)
+  KsConfig::color_t calculateRainbowColor(uint8_t index)
   {
     // Determinar el valor base de matiz (hue) para el arco iris
     uint8_t baseHue = rainbowHue[index] % 255;
@@ -117,7 +117,7 @@ public:
     }
 
     // Convertir el valor de matriz (hue) directamente en un color RGB
-    RGBW rainbow;
+    KsConfig::color_t rainbow;
     switch (rainbowHue[index] / 43)
     {
     case 0:
@@ -152,7 +152,9 @@ public:
       break;
     }
     // Apagar el componente blanco
+#ifdef RGBW_LED
     rainbow.w = 0;
+#endif
 
     // Incrementar el valor de matiz (hue) base para el próximo ciclo
     rainbowHue[index]++;
@@ -163,7 +165,7 @@ public:
     return rainbow;
   }
 
-  void fadeOffEffect(RGBW &color, uint64_t &time, uint8_t index)
+  void fadeOffEffect(KsConfig::color_t &color, uint64_t &time, uint8_t index)
   {
 
     auto elapsedTime = static_cast<float>(time);
@@ -177,13 +179,15 @@ public:
     color.r = static_cast<uint8_t>(color.r * fade_factor[index]);
     color.g = static_cast<uint8_t>(color.g * fade_factor[index]);
     color.b = static_cast<uint8_t>(color.b * fade_factor[index]);
+#ifdef RGBW_LED
     color.w = static_cast<uint8_t>(color.w * fade_factor[index]);
+#endif
   }
 
-  RGBW calculateRainbowColorWithFade(uint8_t index, uint64_t &time)
+  KsConfig::color_t calculateRainbowColorWithFade(uint8_t index, uint64_t &time)
   {
     // Calcula el color del arco iris para el índice dado
-    RGBW rainbowColor = calculateRainbowColor(index);
+    KsConfig::color_t rainbowColor = calculateRainbowColor(index);
 
     // Aplica el efecto de desvanecimiento gradual al color del arco iris
     fadeOffEffect(rainbowColor, time, index);
@@ -207,7 +211,7 @@ public:
         uint64_t elapsedTime = currentTime - keypress_leds[i];
 
         // Calcula el color del arcoíris atenuado
-        RGBW color = calculateRainbowColorWithFade(i, elapsedTime);
+        KsConfig::color_t color = calculateRainbowColorWithFade(i, elapsedTime);
 
         // Actualiza el LED con el color calculado
         LEDManagement::set_led_at(color, i);
@@ -216,7 +220,11 @@ public:
       }
       else if ((currentTime - keypress_leds[i]) >= FADE_DURATION)
       {
-        RGBW off = {0, 0, 0, 0};
+#ifdef RGBW_LED
+        KsConfig::color_t off = {0, 0, 0, 0};
+#else
+        KsConfig::color_t off = {0, 0, 0};
+#endif
         keypress_leds[i] = 0;
         fade_factor[i] = 0;
         rainbowHue[i] = 0;

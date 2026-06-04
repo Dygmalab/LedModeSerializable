@@ -73,8 +73,7 @@ public:
 
     i = (((3 * (uint16_t)(ii)) - (2 * (uint16_t)(iii))) / 2) + 80;
 
-    RGBW breathe = LEDManagement::HSVtoRGB(breatheHue, breatheSaturation, i);
-    breathe.w = 0;
+    KsConfig::color_t breathe = LEDManagement::HSVtoRGB(breatheHue, breatheSaturation, i);
     LEDManagement::set_all_leds(breathe);
   }
 #else

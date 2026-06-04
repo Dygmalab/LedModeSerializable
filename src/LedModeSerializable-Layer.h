@@ -82,10 +82,13 @@ public:
       actualLayer = LEDManagement::layers.at(this->layer);
     }
 
+    // Render backlight LEDs using palette
+    // NOTE: Palette and color types (RGB or RGBW) are configured in KsConfig based on project requirements
     for (uint8_t i = 0; i < KsConfig::MAX_BL_LEDS; i++)
     {
       uint8_t palette_idx = actualLayer.keyMap_leds[i];
-      RGBW &color = LEDManagement::palette[palette_idx];
+      KsConfig::color_t &color = LEDManagement::palette[palette_idx];
+      
       if(i == 0)
       {
           DBG_PRINTF_TRACE("Layer effect: LED[0] palette_idx=%d, color r=%d g=%d b=%d", 
@@ -94,9 +97,10 @@ public:
       LEDManagement::set_led_at(color, i);
     }
 
+    // Render underglow LEDs using palette
     for (uint8_t  i  = 0;  i < KsConfig::MAX_UG_LEDS ; i++)
     {
-        RGBW &color = LEDManagement::palette[actualLayer.underGlow_leds[i]];
+        KsConfig::color_t &color = LEDManagement::palette[actualLayer.underGlow_leds[i]];
         LEDManagement::set_ug_at(color, i);
     }
     LEDManagement::set_updated(true);
