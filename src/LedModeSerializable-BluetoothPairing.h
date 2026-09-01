@@ -252,7 +252,11 @@ public:
   }
 #endif
 
-
+  enum Channels : uint8_t
+  {
+    NOT_CONNECTED = BT_CHANNEL_COUNT,
+    NOT_ON_ADVERTISING
+  };
 
   uint8_t paired_channels_;
   uint8_t connected_channel_id_;
@@ -277,11 +281,7 @@ private:
   static constexpr KsConfig::color_t yellow = {150, 150, 0};
   static constexpr KsConfig::color_t ledOff = {0, 0, 0};
 #endif
-  enum Channels : uint8_t
-  {
-    NOT_CONNECTED = BT_CHANNEL_COUNT,
-    NOT_ON_ADVERTISING
-  };
+
   std::vector<KsConfig::color_t> key_color{BT_CHANNEL_COUNT};
   std::vector<uint8_t> is_paired{BT_CHANNEL_COUNT};
   uint8_t underglow_led_id = 0;
